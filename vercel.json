@@ -1,4 +1,4 @@
 {
   "cleanUrls": true,
-  "rewrites": [{ "source": "/", "destination": "/cue.dc.html" }]
+  "rewrites": [{ "source": "/", "destination": "/cue.dc" }]
 }
