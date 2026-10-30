@@ -23,10 +23,10 @@
   .train{position:absolute;z-index:4;left:50%;bottom:15vh;width:min(720px,80vw);transform:translateX(-36%)}
   .train svg{width:100%;height:auto;overflow:visible}
   .wheel{animation:spin .5s linear infinite;transform-box:fill-box;transform-origin:center}
-  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes spin{to{transform:rotate(-360deg)}}
   .puff{animation:puff 1.8s ease-out infinite;transform-box:fill-box;transform-origin:center}
   .puff:nth-child(2){animation-delay:-.6s}.puff:nth-child(3){animation-delay:-1.2s}
-  @keyframes puff{0%{transform:translate(0,0) scale(.4);opacity:.8}100%{transform:translate(-90px,-70px) scale(1.6);opacity:0}}
+  @keyframes puff{0%{transform:translate(0,0) scale(.4);opacity:.8}100%{transform:translate(90px,-70px) scale(1.6);opacity:0}}
   .rail{position:absolute;z-index:3;left:0;right:0;bottom:calc(15vh - 6px);height:6px;background:repeating-linear-gradient(90deg,#3b3550 0 26px,transparent 26px 40px);background-position-x:var(--rx,0px)}
   .rail::after{content:"";position:absolute;left:0;right:0;top:-3px;height:3px;background:#3b3550}
   .ground{position:absolute;left:0;right:0;bottom:0;height:calc(15vh - 6px);background:var(--g,#6d5a4f);z-index:3}
@@ -91,10 +91,10 @@
     const max=document.body.scrollHeight-innerHeight;const target=max>0?scrollY/max:0;p+=(target-p)*.1;
     const travel=p*4800+drift;
     const half=innerWidth*3; // 3000 units = 300vw
-    far.style.transform=`translateX(${-((travel*.15)%half)}px)`;
-    mid.style.transform=`translateX(${-((travel*.4)%half)}px)`;
-    near.style.transform=`translateX(${-((travel*1)%half)}px)`;
-    rail.style.setProperty('--rx',(-travel*1.6)+'px');
+    far.style.transform=`translateX(${((travel*.15)%half)-half}px)`;
+    mid.style.transform=`translateX(${((travel*.4)%half)-half}px)`;
+    near.style.transform=`translateX(${((travel*1)%half)-half}px)`;
+    rail.style.setProperty('--rx',(travel*1.6)+'px'); // scenery moves right: the train travels left, locomotive first
     // day into dusk across the journey
     const k=Math.min(1,p*1.1);
     sky.style.setProperty('--s1',rgb(mix([249,201,143],[54,44,92],k)));

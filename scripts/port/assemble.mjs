@@ -23,7 +23,18 @@ code = replaceOnce(code, 'class Component extends DCLogic {', 'export default cl
 code = replaceOnce(code, "state = { view:'home', T:[], C:[], A:[],", "state = { view:this.props.view||'home', introOn:(this.props.view||'home')==='home'?undefined:false, T:TEMPLATES, C:COMPONENTS, A:ANIMATIONS,", 'state');
 code = replaceOnce(code, "    const u=p=>new URL(p,document.baseURI).href;\n    Promise.all([import(u('library-data.js')),import(u('component-data.js'))]).then(([l,c])=>this.setState({T:l.TEMPLATES,C:c.COMPONENTS,A:c.ANIMATIONS}));\n", '', 'data import');
 // Keep the address bar and the view in step (see routes.js).
-code = replaceOnce(code, 'componentDidUpdate(pp,ps){', 'componentDidUpdate(pp,ps){this.syncRoute(pp,ps);', 'didUpdate');
+code = replaceOnce(code, 'componentDidUpdate(pp,ps){', 'componentDidUpdate(pp,ps){this.syncRoute(pp,ps);if(ps.comp!==this.state.comp||ps.animOverride!==this.state.animOverride||ps.view!==this.state.view)this.centerChips();', 'didUpdate');
+code = replaceOnce(code, '    this.introInit();\n', '    this.introInit();\n    this.centerChips(true);\n', 'centerChips on mount');
+// Phone layout of Components: keep the selected component and animation chips in view.
+code = replaceOnce(code, '  hash(s){', `  centerChips(instant){
+    if(typeof window==='undefined'||!window.matchMedia('(max-width: 767px)').matches)return;
+    requestAnimationFrame(()=>[['.cmp-list','[aria-current="true"]'],['.cmp-anims','[aria-pressed="true"]']].forEach(([box,sel])=>{
+      const c=document.querySelector(box),el=c&&c.querySelector(sel);if(!el||c.scrollWidth<=c.clientWidth)return;
+      const cr=c.getBoundingClientRect(),er=el.getBoundingClientRect();
+      c.scrollTo({left:c.scrollLeft+(er.left-cr.left)-(cr.width-er.width)/2,behavior:instant||this.reduce?'auto':'smooth'});
+    }));
+  }
+  hash(s){`, 'centerChips');
 code = replaceOnce(code, '  hash(s){', `  syncRoute(pp,ps){
     const v=this.state.view;
     if(this.props.view!==pp.view&&this.props.view!==v){this.setState({view:this.props.view,open:null});return;}
@@ -49,7 +60,29 @@ body = body.slice(0, toastStart) + '<CueToast text={v.toast} />' + body.slice(to
 const navStart = body.indexOf('<nav className="tabbar"');
 must(navStart > -1, 'tabbar');
 const navEnd = body.indexOf('</nav>', navStart) + '</nav>'.length;
-body = body.slice(0, navStart) + '<CueTabBar active={v.tabActive} nav={v.hNav} />' + body.slice(navEnd);
+body = body.slice(0, navStart) + '<CueTabBar active={v.tabActive} nav={v.hNav} hidden={!!(v.drawerOpen || v.palOpen || v.paywallOpen)} />' + body.slice(navEnd);
+
+// Home hero stack: five different templates, each with its own poster (the export showed Atlas Rail three
+// times and paired videos with other templates' posters). The Paste scene poster now matches its video.
+const media = [
+  ['src="/media/t-night-shift.mp4" poster="/media/t-atlas-rail-2.jpg"', 'src="/media/t-night-shift.mp4" poster="/media/t-night-shift.jpg"'],
+  ['src="/media/t-monsoon.mp4" poster="/media/t-inkwell-3.jpg"', 'src="/media/t-monsoon.mp4" poster="/media/t-monsoon.jpg"'],
+  ['src="/media/t-atlas-rail.mp4" poster="/media/t-monsoon-3.jpg"', 'src="/media/t-quarry.mp4" poster="/media/t-quarry.jpg"'],
+  ['src="/media/t-atlas-rail.mp4" poster="/media/t-atlas-rail-1.jpg"', 'src="/media/t-inkwell.mp4" poster="/media/t-inkwell.jpg"'],
+  ['src="/media/t-atlas-rail.mp4" poster="/media/t-monsoon-2.jpg"', 'src="/media/t-atlas-rail.mp4" poster="/media/t-atlas-rail.jpg"'],
+  ['src="/media/t-monsoon.mp4" poster="/media/t-night-shift-3.jpg"', 'src="/media/t-monsoon.mp4" poster="/media/t-monsoon.jpg"'],
+];
+for (const [a, b] of media) body = replaceOnce(body, a, b, 'media ' + a);
+
+// Components view: hooks for the phone layout in app/globals.css (.cmp-*).
+const cmp = [
+  ['<div style={{"display":"grid","gridTemplateColumns":"repeat(auto-fit,minmax(min(100%,240px),1fr))","gap":"20px","alignItems":"start"}}>', '<div className="cmp-grid" style={{"display":"grid","gridTemplateColumns":"repeat(auto-fit,minmax(min(100%,240px),1fr))","gap":"20px","alignItems":"start"}}>'],
+  ['<nav aria-label="Components"', '<nav className="cmp-list" aria-label="Components"'],
+  ['<section style={{"gridColumn":"span 2"', '<section className="cmp-main" style={{"gridColumn":"span 2"'],
+  ['<div data-tilt="7"', '<div className="cmp-stage" data-tilt="7"'],
+  ['<aside aria-label="Animation library"', '<aside className="cmp-anims" aria-label="Animation library"'],
+];
+for (const [a, b] of cmp) body = replaceOnce(body, a, b, 'cmp ' + a);
 
 const header = `'use client';
 // Ported from the Claude Design export (cue.dc.html). The logic below is the original

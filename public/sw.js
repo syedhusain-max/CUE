@@ -1,6 +1,6 @@
 // Cue service worker: makes the site installable and keeps the app shell available offline.
 // Pages and scripts are network-first so a new deploy shows up on the next visit.
-const VERSION = 'cue-v3'; // new name so the Next.js site replaces the old single-file cache
+const VERSION = 'cue-v4'; // bump whenever a file in media/ is replaced under the same name
 const SHELL = ['/', '/manifest.webmanifest', '/icons/icon-192.png'];
 
 self.addEventListener('install', e => {

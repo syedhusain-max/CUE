@@ -81,10 +81,11 @@ const subscribe = (cb) => {
 const usePhone = () =>
   useSyncExternalStore(subscribe, () => window.matchMedia(PHONE).matches, () => false);
 
-export default function CueTabBar({ active, nav }) {
+export default function CueTabBar({ active, nav, hidden }) {
   // Only mounted on phones: its animations must not run on a bar that is not shown.
   const phone = usePhone();
-  if (!phone) return null;
+  // Also stepped aside while a panel or dialog is open, so it never covers their buttons.
+  if (!phone || hidden) return null;
   return (
     <BottomNavigation
       value={active}
