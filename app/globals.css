@@ -1,0 +1,79 @@
+@layer theme, base, components, utilities;
+
+/* Tailwind without its preflight reset: the ported views were designed on browser defaults. */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* CUE design tokens (CLAUDE.md): one accent, one dark theme, pills for controls, 24 to 28px cards. */
+@theme {
+  --color-accent: #e1e36b;
+  --color-surface: #000000;
+  --color-strong: #121212;
+  --color-raised: #202020;
+  --color-line: #303030;
+  --color-ink: #f5f5f5;
+  --color-muted: #ababab;
+  --color-on-accent: #09090b;
+  --radius-card: 24px;
+  --radius-card-lg: 28px;
+}
+
+/* ---- Ported from the Claude Design export ---- */
+/* In the base layer so Tailwind utilities can override it; inline styles still win. */
+@layer base {
+body{margin:0;background:#000;color:#f5f5f5;font-family:-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:24px;-webkit-font-smoothing:antialiased}
+a{color:#f5f5f5;text-decoration:underline;text-underline-offset:3px}a:hover{color:#e1e36b}[data-root] a{text-decoration:none}
+*{box-sizing:border-box}
+:focus-visible{outline:2px solid #e1e36b;outline-offset:2px}
+::selection{background:#e1e36b;color:#09090b}
+input,select,textarea,button{font:inherit;color:inherit}
+@keyframes mxFadeUp{from{opacity:0;transform:translateY(24px)}}
+@keyframes mxBlurIn{from{opacity:0;filter:blur(12px)}}
+@keyframes mxScaleIn{from{opacity:0;transform:scale(.92)}}
+@keyframes mxClip{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes mxSlideIn{from{opacity:0;transform:translateX(-32px)}}
+@keyframes mxMarquee{to{transform:translateX(-50%)}}
+@keyframes mxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes mxLift{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes mxParallax{0%,100%{transform:translateX(0)}50%{transform:translateX(-6%)}}
+@keyframes mxType{from{max-width:0}to{max-width:100%}}
+@keyframes mxBlink{50%{border-color:transparent}}
+@keyframes mxSpin{to{transform:rotate(360deg)}}
+@keyframes mxDrift{0%{transform:translate(-10%,-5%) scale(1)}100%{transform:translate(18%,12%) scale(1.25)}}
+@keyframes mxPulse{0%,100%{transform:scale(.85);opacity:.55}50%{transform:scale(1.08);opacity:1}}
+@keyframes mxSweep{0%{transform:translateX(-140%) skewX(-18deg)}100%{transform:translateX(340%) skewX(-18deg)}}
+@keyframes mxClipLoop{0%{clip-path:inset(100% 0 0 0)}40%,70%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 0 100% 0)}}
+@keyframes mxRise{from{opacity:0;transform:translateY(8px)}}
+@keyframes mxFlip{from{opacity:0;transform:perspective(600px) rotateX(-70deg)}}
+@keyframes mxWipeX{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes mxRotIn{from{opacity:0;transform:translateY(20px) rotate(-4deg)}}
+@keyframes mxDrop{0%{opacity:0;transform:translateY(-40px)}60%{opacity:1;transform:translateY(6px)}80%{transform:translateY(-2px)}100%{transform:translateY(0)}}
+@keyframes mxFocus{from{opacity:0;transform:scale(1.12);filter:blur(8px)}}
+@keyframes mxGlow{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(225,227,107,0))}50%{transform:scale(1.03);filter:drop-shadow(0 0 14px rgba(225,227,107,.35))}}
+@keyframes mxBA{0%,100%{clip-path:inset(0 68% 0 0)}50%{clip-path:inset(0 28% 0 0)}}
+@keyframes mxRiseL{from{opacity:0;transform:translateY(28px)}}
+@keyframes mxWall{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes mxWallR{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+@keyframes mxShimmer{0%{opacity:.4}50%{opacity:1}100%{opacity:.4}}
+@keyframes hmRise{from{opacity:0;transform:translateY(28px)}}
+@keyframes mxDeal{from{opacity:0;transform:translateZ(-500px) rotateX(35deg)}}
+@keyframes hmFloat{from{transform:translateY(0)}to{transform:translateY(calc(-14px * var(--depth,1)))}}
+@keyframes mxRow{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes mxRowR{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+@keyframes hmGlow{0%{transform:translate(0,0) scale(1)}100%{transform:translate(8vw,6vh) scale(1.2)}}
+@keyframes mxBlurLoop{0%{opacity:0;filter:blur(14px);transform:scale(1.08)}22%,82%{opacity:1;filter:blur(0);transform:scale(1)}100%{opacity:1;filter:blur(0);transform:scale(1)}}
+@keyframes mxWipeLoop{0%{clip-path:inset(0 100% 0 0)}30%,85%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 0 0 0)}}
+@keyframes mxFlipLoop{0%{opacity:0;transform:rotateX(-80deg)}25%,85%{opacity:1;transform:rotateX(0)}100%{opacity:1;transform:rotateX(0)}}
+@keyframes mxTypeLoop{0%{clip-path:inset(0 100% 0 0)}45%,90%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 0 0 0)}}
+@keyframes mxCaret{50%{opacity:0}}
+.skip-link{position:fixed;left:16px;top:12px;z-index:300;background:#e1e36b;color:#09090b!important;border-radius:999px;padding:10px 18px;font-weight:600;transform:translateY(-200%)}
+.skip-link:focus{transform:none}
+main:focus{outline:none}
+.cue-tabbar{display:none!important}
+@media (max-width:767px){
+  .nav-links,.hide-sm{display:none!important}
+  .cue-tabbar{display:flex!important}
+  [data-tabpad]{padding-bottom:96px!important}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+}
