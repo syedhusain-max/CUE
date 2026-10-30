@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlas Rail. Cross the continent by train</title>
+<style>
+  *{box-sizing:border-box;margin:0}
+  html,body{background:#f6d9b8}
+  body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#1d1a2e;height:420vh}
+  .stage{position:sticky;top:0;height:100vh;overflow:hidden}
+  .sky{position:absolute;inset:0;background:linear-gradient(180deg,var(--s1,#f9c98f),var(--s2,#f6e3c4) 70%)}
+  .sun{position:absolute;width:150px;height:150px;border-radius:50%;left:72%;top:calc(18% + var(--sunY,0) * 1%);background:radial-gradient(circle,#fff6dc,#ffcf7a 60%,rgba(255,207,122,0) 72%)}
+  .layer{position:absolute;left:0;bottom:0;height:100%;width:600vw;will-change:transform}
+  .layer svg{position:absolute;left:0;bottom:0;width:100%;height:100%}
+  .copy{position:absolute;z-index:5;left:6vw;top:13vh;max-width:560px}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;padding:9px 16px;border:1px solid rgba(29,26,46,.35);border-radius:999px;background:rgba(255,255,255,.25)}
+  h1{margin-top:22px;font-family:"Futura","Avenir Next",ui-sans-serif,sans-serif;font-weight:700;font-size:clamp(44px,6.2vw,92px);line-height:.98;letter-spacing:-.02em}
+  .lede{margin-top:18px;font-size:18px;line-height:1.5;max-width:420px;color:#3b3550}
+  .ctas{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
+  .btn{padding:15px 24px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none}
+  .primary{background:#1d1a2e;color:#f6e3c4}.ghost{border:1px solid #1d1a2e;color:#1d1a2e}
+  .train{position:absolute;z-index:4;left:50%;bottom:15vh;width:min(720px,80vw);transform:translateX(-36%)}
+  .train svg{width:100%;height:auto;overflow:visible}
+  .wheel{animation:spin .5s linear infinite;transform-box:fill-box;transform-origin:center}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .puff{animation:puff 1.8s ease-out infinite;transform-box:fill-box;transform-origin:center}
+  .puff:nth-child(2){animation-delay:-.6s}.puff:nth-child(3){animation-delay:-1.2s}
+  @keyframes puff{0%{transform:translate(0,0) scale(.4);opacity:.8}100%{transform:translate(-90px,-70px) scale(1.6);opacity:0}}
+  .rail{position:absolute;z-index:3;left:0;right:0;bottom:calc(15vh - 6px);height:6px;background:repeating-linear-gradient(90deg,#3b3550 0 26px,transparent 26px 40px);background-position-x:var(--rx,0px)}
+  .rail::after{content:"";position:absolute;left:0;right:0;top:-3px;height:3px;background:#3b3550}
+  .ground{position:absolute;left:0;right:0;bottom:0;height:calc(15vh - 6px);background:var(--g,#6d5a4f);z-index:3}
+  .route{position:absolute;z-index:5;right:6vw;top:14vh;font:500 12px/1.9 ui-monospace,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;text-align:right;color:#3b3550}
+  .route b{display:block;font:700 28px/1.1 "Futura","Avenir Next",ui-sans-serif,sans-serif;letter-spacing:-.01em;text-transform:none;color:#1d1a2e}
+  @media (max-width:760px){.route{display:none}.copy{top:10vh}}
+  @media (prefers-reduced-motion:reduce){.wheel,.puff{animation:none}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="sky" id="sky"></div>
+  <div class="sun" id="sun"></div>
+  <div class="layer" id="far"><svg viewBox="0 0 6000 1000" preserveAspectRatio="none" aria-hidden="true">
+    <path id="farp" d="" fill="#c9a2a6" opacity=".75"/></svg></div>
+  <div class="layer" id="mid"><svg viewBox="0 0 6000 1000" preserveAspectRatio="none" aria-hidden="true">
+    <path id="midp" d="" fill="#8f7393"/></svg></div>
+  <div class="layer" id="near"><svg viewBox="0 0 6000 1000" preserveAspectRatio="none" aria-hidden="true"><g id="trees"></g></svg></div>
+  <div class="ground" id="ground"></div>
+  <div class="rail" id="rail"></div>
+  <div class="train" aria-hidden="true"><svg viewBox="0 0 720 170">
+    <g fill="#f6e3c4"><circle class="puff" cx="96" cy="20" r="18"/><circle class="puff" cx="96" cy="20" r="14"/><circle class="puff" cx="96" cy="20" r="16"/></g>
+    <rect x="70" y="30" width="34" height="36" rx="4" fill="#1d1a2e"/>
+    <path d="M30 70 h170 v70 h-190 a22 22 0 0 1 20 -22z" fill="#c4473a"/>
+    <rect x="120" y="44" width="80" height="40" rx="6" fill="#1d1a2e"/><rect x="132" y="54" width="24" height="18" rx="3" fill="#ffd98a"/><rect x="164" y="54" width="24" height="18" rx="3" fill="#ffd98a"/>
+    <rect x="214" y="58" width="236" height="82" rx="10" fill="#2f5d7c"/><rect x="464" y="58" width="236" height="82" rx="10" fill="#2f5d7c"/>
+    <g fill="#ffd98a"><rect x="232" y="72" width="40" height="26" rx="4"/><rect x="284" y="72" width="40" height="26" rx="4"/><rect x="336" y="72" width="40" height="26" rx="4"/><rect x="388" y="72" width="40" height="26" rx="4"/><rect x="482" y="72" width="40" height="26" rx="4"/><rect x="534" y="72" width="40" height="26" rx="4"/><rect x="586" y="72" width="40" height="26" rx="4"/><rect x="638" y="72" width="40" height="26" rx="4"/></g>
+    <rect x="214" y="112" width="486" height="6" fill="#e9c46a"/>
+    <g fill="#1d1a2e"><g class="wheel"><circle cx="60" cy="146" r="18"/><rect x="58" y="128" width="4" height="36" fill="#6b6385"/></g><g class="wheel"><circle cx="150" cy="146" r="18"/><rect x="148" y="128" width="4" height="36" fill="#6b6385"/></g>
+      <g class="wheel"><circle cx="260" cy="148" r="14"/><rect x="258" y="134" width="4" height="28" fill="#6b6385"/></g><g class="wheel"><circle cx="404" cy="148" r="14"/><rect x="402" y="134" width="4" height="28" fill="#6b6385"/></g>
+      <g class="wheel"><circle cx="510" cy="148" r="14"/><rect x="508" y="134" width="4" height="28" fill="#6b6385"/></g><g class="wheel"><circle cx="654" cy="148" r="14"/><rect x="652" y="134" width="4" height="28" fill="#6b6385"/></g></g>
+  </svg></div>
+  <div class="copy">
+    <span class="eyebrow">Atlas Rail</span>
+    <h1>Cross the continent by rail.</h1>
+    <p class="lede">Sleeper cabins, dining cars and eleven countries between breakfast and the coast.</p>
+    <div class="ctas"><a class="btn primary" href="#">Plan a journey</a><a class="btn ghost" href="#">See the routes</a></div>
+  </div>
+  <div class="route" aria-hidden="true">Now passing<b id="stn">Valdora</b><span id="km">0 km</span></div>
+</div>
+<script>
+(()=>{
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // generated ridgelines so the scene is fully code-drawn
+  // each layer is a 3000-unit tile drawn twice, so it loops without a seam
+  const ridge=(seed,base,amp,step)=>{const edge=(base-amp*.4).toFixed(0);let pts=[];let r=seed;for(let x=step;x<3000;x+=step){r=(r*9301+49297)%233280;const y=base-amp*(.35+.65*(r/233280))*Math.abs(Math.sin(x/(step*2.3)+seed));pts.push(`L${x} ${y.toFixed(0)}`);}
+    const one=o=>`M${o} 1000 L${o} ${edge} `+pts.map(p=>p.replace(/^L(\d+)/,(m,v)=>'L'+(+v+o))).join(' ')+` L${o+3000} ${edge} L${o+3000} 1000 Z`;return one(0)+' '+one(3000);};
+  document.getElementById('farp').setAttribute('d',ridge(3,560,320,140));
+  document.getElementById('midp').setAttribute('d',ridge(7,720,240,90));
+  const trees=document.getElementById('trees');let t='';let r=11;
+  const tile=[];for(let x=20;x<2960;x+=r%70+40){r=(r*9301+49297)%233280;const h=60+r%80;t+=`<path d="M${x} 1000 L${x} ${880-h} " stroke="#3b3550" stroke-width="5"/><path d="M${x-24} ${900-h*.4} L${x} ${840-h} L${x+24} ${900-h*.4} Z" fill="#4f6b4a"/>`;
+    if(r%9===0&&x<2800)t+=`<rect x="${x+40}" y="760" width="90" height="70" fill="#e9c46a"/><path d="M${x+32} 762 L${x+85} 720 L${x+138} 762 Z" fill="#c4473a"/><rect x="${x+76}" y="790" width="22" height="40" fill="#3b3550"/>`;}
+  trees.innerHTML=`<g>${t}</g><g transform="translate(3000 0)">${t}</g>`;
+  const stations=['Valdora','Kesselmark','Orvieno','Lindhaven','Port Saray'];
+  const far=document.getElementById('far'),mid=document.getElementById('mid'),near=document.getElementById('near'),rail=document.getElementById('rail');
+  const sky=document.getElementById('sky'),sun=document.getElementById('sun'),ground=document.getElementById('ground');
+  const mix=(a,b,t)=>a.map((v,i)=>Math.round(v+(b[i]-v)*t));
+  const rgb=a=>`rgb(${a.join(',')})`;
+  let p=0, drift=0, last=performance.now();
+  function frame(now){
+    const dt=now-last;last=now; if(!reduce)drift+=dt*.012; // the train never quite stops
+    const max=document.body.scrollHeight-innerHeight;const target=max>0?scrollY/max:0;p+=(target-p)*.1;
+    const travel=p*4800+drift;
+    const half=innerWidth*3; // 3000 units = 300vw
+    far.style.transform=`translateX(${-((travel*.15)%half)}px)`;
+    mid.style.transform=`translateX(${-((travel*.4)%half)}px)`;
+    near.style.transform=`translateX(${-((travel*1)%half)}px)`;
+    rail.style.setProperty('--rx',(-travel*1.6)+'px');
+    // day into dusk across the journey
+    const k=Math.min(1,p*1.1);
+    sky.style.setProperty('--s1',rgb(mix([249,201,143],[54,44,92],k)));
+    sky.style.setProperty('--s2',rgb(mix([246,227,196],[236,128,98],k)));
+    sun.style.setProperty('--sunY',(k*58).toFixed(1));
+    ground.style.setProperty('--g',rgb(mix([109,90,79],[45,36,58],k)));
+    document.getElementById('stn').textContent=stations[Math.min(stations.length-1,Math.floor(p*stations.length*.999))];
+    document.getElementById('km').textContent=Math.round(p*2140)+' km';
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

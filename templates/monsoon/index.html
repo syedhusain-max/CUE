@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monsoon. Rain, forecast to the minute</title>
+<style>
+  *{box-sizing:border-box;margin:0}
+  html,body{background:#071318}
+  body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#eef6f6;height:320vh}
+  .stage{position:sticky;top:0;height:100vh;overflow:hidden;display:grid;place-items:center}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .flash{position:absolute;inset:0;background:#dff4ff;opacity:0;pointer-events:none;mix-blend-mode:screen}
+  .copy{position:relative;z-index:2;text-align:center;width:min(900px,90vw);text-shadow:0 2px 24px rgba(7,19,24,.45)}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;padding:9px 16px;border:1px solid rgba(238,246,246,.3);border-radius:999px;background:rgba(7,19,24,.35);backdrop-filter:blur(6px)}
+  .dot{width:7px;height:7px;border-radius:50%;background:#7fe3d0;box-shadow:0 0 10px #7fe3d0}
+  h1{margin-top:24px;font-size:clamp(46px,7.6vw,112px);line-height:.98;letter-spacing:-.035em;font-weight:700}
+  .lede{margin:20px auto 0;max-width:470px;font-size:19px;line-height:1.5;opacity:.82}
+  .ctas{margin-top:30px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{padding:15px 24px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none}
+  .primary{background:#eef6f6;color:#071318}.ghost{border:1px solid rgba(238,246,246,.6);color:#eef6f6;background:rgba(7,19,24,.45);text-shadow:none}
+  .meter{text-shadow:0 1px 8px rgba(7,19,24,.6);position:absolute;z-index:2;left:50%;bottom:6vh;transform:translateX(-50%);display:flex;align-items:center;gap:14px;font:500 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+  .bar{width:180px;height:4px;border-radius:9px;background:rgba(238,246,246,.18);overflow:hidden}
+  .bar i{display:block;height:100%;width:calc(var(--r,0) * 100%);background:linear-gradient(90deg,#7fe3d0,#5aa9ff)}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas id="c" aria-hidden="true"></canvas>
+  <div class="flash" id="flash"></div>
+  <div class="copy">
+    <span class="eyebrow"><span class="dot"></span>Monsoon Weather</span>
+    <h1>Rain, forecast to the minute.</h1>
+    <p class="lede">Street-level radar that tells you when the first drop lands and when the last one does.</p>
+    <div class="ctas"><a class="btn primary" href="#">Get the app</a><a class="btn ghost" href="#">See live radar</a></div>
+  </div>
+  <div class="meter" aria-hidden="true"><span id="lbl">Heavy rain</span><span class="bar"><i id="bar"></i></span><span id="mm">0.0 mm/h</span></div>
+</div>
+<script>
+(()=>{
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const c=document.getElementById('c'), x=c.getContext('2d'), flash=document.getElementById('flash');
+  let W,H,dpr; const drops=[], splashes=[];
+  const fit=()=>{dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0)};
+  fit(); addEventListener('resize',fit);
+  const N=reduce?0:520;
+  for(let i=0;i<N;i++)drops.push({x:Math.random()*W,y:Math.random()*H,z:Math.random(),vx:0});
+  let mx=-999,my=-999, tmx=-999,tmy=-999;
+  addEventListener('pointermove',e=>{tmx=e.clientX;tmy=e.clientY},{passive:true});
+  addEventListener('pointerleave',()=>{tmx=tmy=-999});
+  const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+  let p=0, last=performance.now(), nextBolt=1600;
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  function sky(clear){
+    // storm teal to clearing dawn as you scroll
+    const g=x.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,`rgb(${lerp(10,40,clear)},${lerp(30,62,clear)},${lerp(38,92,clear)})`);
+    g.addColorStop(.65,`rgb(${lerp(7,150,clear)},${lerp(22,88,clear)},${lerp(28,92,clear)})`);
+    g.addColorStop(1,`rgb(${lerp(5,214,clear)},${lerp(14,140,clear)},${lerp(18,104,clear)})`);
+    x.fillStyle=g;x.fillRect(0,0,W,H);
+    if(clear>0){x.globalAlpha=clear;const s=x.createRadialGradient(W*.5,H*1.02,0,W*.5,H*1.02,H*.7);s.addColorStop(0,'rgba(255,214,150,.6)');s.addColorStop(1,'rgba(255,230,170,0)');x.fillStyle=s;x.fillRect(0,0,W,H);x.globalAlpha=1;}
+  }
+  function frame(t){
+    const dt=Math.min(50,t-last);last=t;
+    const max=document.body.scrollHeight-innerHeight; const target=max>0?scrollY/max:0; p+=(target-p)*.08;
+    const intensity=clamp(1-Math.max(0,(p-.45)/.45)); const clear=clamp((p-.5)/.45);
+    mx+= (tmx-mx)*.25; my+=(tmy-my)*.25;
+    sky(clear);
+    const R=110, wind=-1.2;
+    x.lineCap='round';
+    for(const d of drops){
+      const sp=(9+d.z*13)*intensity+.0001;
+      d.y+=sp*dt/16; d.x+=(wind+d.vx)*dt/16; d.vx*=.92;
+      const dx=d.x-mx, dy=d.y-my, dist=Math.hypot(dx,dy);
+      if(dist<R && dy<0){ // umbrella: drops slide off the canopy
+        const k=(R-dist)/R; d.vx+= (dx>0?1:-1)*k*6; d.y-=sp*dt/16*k*1.2;
+        if(Math.random()<.04)splashes.push({x:d.x,y:d.y,a:1,r:1});
+      }
+      if(d.y>H){ if(Math.random()<.25&&intensity>.2)splashes.push({x:d.x,y:H-4-Math.random()*30,a:1,r:1}); d.y=-20-Math.random()*H*.3; d.x=Math.random()*(W+200);}
+      if(intensity<.02)continue;
+      x.strokeStyle=`rgba(200,236,240,${(.18+d.z*.45)*intensity})`; x.lineWidth=.6+d.z*1.2;
+      x.beginPath();x.moveTo(d.x,d.y);x.lineTo(d.x-(wind+d.vx)*2,d.y-(8+d.z*16)*intensity);x.stroke();
+    }
+    for(let i=splashes.length-1;i>=0;i--){const s=splashes[i];s.r+=dt*.06;s.a-=dt*.003;if(s.a<=0){splashes.splice(i,1);continue;}
+      x.strokeStyle=`rgba(210,240,244,${s.a*.6})`;x.lineWidth=1;x.beginPath();x.ellipse(s.x,s.y,s.r*3,s.r,0,0,Math.PI*2);x.stroke();}
+    // umbrella canopy hint
+    if(mx>0&&intensity>.1){x.strokeStyle=`rgba(127,227,208,${.45*intensity})`;x.lineWidth=2;x.beginPath();x.arc(mx,my,R*.82,Math.PI*1.08,Math.PI*1.92);x.stroke();}
+    // lightning while the storm is heavy
+    nextBolt-=dt; if(!reduce&&nextBolt<0&&intensity>.6){flash.animate([{opacity:0},{opacity:.55},{opacity:.05},{opacity:.4},{opacity:0}],{duration:520});nextBolt=3800+Math.random()*3000;}
+    document.getElementById('bar').parentElement.style.setProperty('--r',intensity.toFixed(3));
+    document.getElementById('mm').textContent=(intensity*14.2).toFixed(1)+' mm/h';
+    document.getElementById('lbl').textContent=intensity>.66?'Heavy rain':intensity>.25?'Easing off':intensity>.02?'Last drops':'Clear by 06:40';
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

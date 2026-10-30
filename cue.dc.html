@@ -1,8 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Animated hero templates, each with the prompt that builds it.">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cue">
+<script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));}</script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -57,10 +66,25 @@ input,select,textarea,button{font:inherit;color:inherit}
 @keyframes mxFlipLoop{0%{opacity:0;transform:rotateX(-80deg)}25%,85%{opacity:1;transform:rotateX(0)}100%{opacity:1;transform:rotateX(0)}}
 @keyframes mxTypeLoop{0%{clip-path:inset(0 100% 0 0)}45%,90%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 0 0 0)}}
 @keyframes mxCaret{50%{opacity:0}}
+.skip-link{position:fixed;left:16px;top:12px;z-index:300;background:#e1e36b;color:#09090b!important;border-radius:999px;padding:10px 18px;font-weight:600;transform:translateY(-200%)}
+.skip-link:focus{transform:none}
+main:focus{outline:none}
+.tabbar{display:none}
+@media (max-width:767px){
+  .nav-links,.hide-sm{display:none!important}
+  .tabbar{display:flex;position:fixed;z-index:60;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));height:64px;padding:6px;gap:2px;
+    background:rgba(10,10,10,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid #202020;border-radius:999px}
+  .tabbar button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:0;border-radius:999px;
+    color:#ababab;font-size:11px;line-height:1;font-weight:500;cursor:pointer;transition:color .15s,background-color .15s}
+  .tabbar button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+  .tabbar button[data-on="1"]{color:#e1e36b;background:#202020}
+  [data-tabpad]{padding-bottom:96px!important}
+}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </helmet>
-<div style="min-height:100vh;background:#000;padding-bottom:{{ rootPad }}">
+<div data-tabpad="1" style="min-height:100vh;background:#000;padding-bottom:{{ rootPad }}">
+  <a class="skip-link" href="#main">Skip to content</a>
   <sc-if value="{{ introOn }}" hint-placeholder-val="{{ true }}">
     <div data-cue-intro="1" onClick="{{ skipIntro }}" role="status" aria-label="Loading Cue" style="position:fixed;inset:0;z-index:200;background:#000;display:flex;align-items:center;justify-content:center;cursor:pointer">
       <div data-cue-lockup="1" style="display:flex;align-items:center;gap:clamp(12px,2vw,20px)">
@@ -91,7 +115,7 @@ input,select,textarea,button{font:inherit;color:inherit}
           <sc-if value="{{ isPill }}" hint-placeholder-val="{{ false }}"><span style="background:#e1e36b;color:#09090b;border-radius:999px;padding:7px 14px 6px;font-family:'Unbounded',system-ui,sans-serif;font-weight:700;font-size:14px;line-height:1;letter-spacing:.02em;text-transform:uppercase">{{ brand }}</span></sc-if>
           <sc-if value="{{ isItalic }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:32px;line-height:1;letter-spacing:-.02em">{{ brandLower }}<span style="color:#e1e36b">.</span></span></sc-if>
         </a>
-        <div style="flex:1;display:flex;justify-content:center;gap:4px;flex-wrap:wrap;overflow:hidden;height:36px">
+        <div class="nav-links" style="flex:1;display:flex;justify-content:center;gap:4px;flex-wrap:wrap;overflow:hidden;height:36px">
           <a href="#library" onClick="{{ hNav.library }}" style="padding:6px 14px;border-radius:999px;font-size:14px;color:#ababab" style-hover="color:#f5f5f5">Library</a>
           <a href="#components" onClick="{{ hNav.components }}" style="padding:6px 14px;border-radius:999px;font-size:14px;color:#ababab" style-hover="color:#f5f5f5">Components</a>
           <a href="#builder" onClick="{{ hNav.builder }}" style="padding:6px 14px;border-radius:999px;font-size:14px;color:#ababab" style-hover="color:#f5f5f5">Builder</a>
@@ -101,13 +125,14 @@ input,select,textarea,button{font:inherit;color:inherit}
       </nav>
     </header>
   
+    <main id="main" tabindex="-1">
     <section id="top" data-hero="1" data-hscene="pass" data-screen-label="Hero" style="position:relative;min-height:100dvh;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));align-items:center;gap:24px;max-width:1280px;margin:0 auto;padding:120px 24px 64px">
       <div aria-hidden="true" style="position:absolute;left:-10vw;top:10vh;width:50vw;height:50vw;border-radius:50%;background:radial-gradient(circle,rgba(225,227,107,.16),transparent 65%);filter:blur(40px);opacity:var(--glow,1);animation:hmGlow 14s ease-in-out infinite alternate;pointer-events:none"></div>
       <div aria-hidden="true" style="position:absolute;right:-12vw;bottom:0;width:46vw;height:46vw;border-radius:50%;background:radial-gradient(circle,rgba(90,170,160,.18),transparent 65%);filter:blur(50px);opacity:var(--glow,1);animation:hmGlow 18s ease-in-out -6s infinite alternate-reverse;pointer-events:none"></div>
   
       <div style="position:relative;display:flex;flex-direction:column;gap:24px;align-items:flex-start;z-index:2">
         <h1 style="margin:0;font-size:calc(clamp(44px,6.4vw,88px) * var(--hs,1));line-height:1;letter-spacing:calc(var(--ht,1) * -.05em);font-weight:var(--hw,600);font-family:var(--hf,inherit);text-wrap:balance;animation:hmRise 1.1s cubic-bezier(.16,1,.3,1) 100ms both">Animated websites, handed to Claude as one prompt.</h1>
-        <p style="margin:0;max-width:440px;font-size:18px;line-height:28px;color:#ababab;text-wrap:pretty;animation:hmRise 1.1s cubic-bezier(.16,1,.3,1) 220ms both">Pick one of 114 recorded builds. {{ brandCap }} writes the prompt that rebuilds it, section by section, motion included.</p>
+        <p style="margin:0;max-width:440px;font-size:18px;line-height:28px;color:#ababab;text-wrap:pretty;animation:hmRise 1.1s cubic-bezier(.16,1,.3,1) 220ms both">Choose a hero, watch it move, then copy the prompt behind it. Every animation is written out, step by step.</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap;animation:hmRise 1.1s cubic-bezier(.16,1,.3,1) 340ms both">
           <a href="#access" onClick="{{ hNav.access }}" style="background:#e1e36b;color:#09090b;border-radius:999px;padding:14px 24px;font-weight:600;white-space:nowrap;box-shadow:rgba(255,255,255,.15) -4px -4px 8px 0 inset,rgba(255,255,255,.15) 4px 4px 4px 0 inset;transition:transform 150ms" style-hover="transform:translateY(-2px);color:#09090b" style-active="transform:scale(.98)">Get access</a>
           <a href="#library" onClick="{{ hNav.library }}" style="background:#121212;border:1px solid #303030;border-radius:999px;padding:14px 24px;white-space:nowrap;transition:border-color 200ms" style-hover="border-color:#ababab;color:#f5f5f5">Browse the library</a>
@@ -118,27 +143,27 @@ input,select,textarea,button{font:inherit;color:inherit}
         <div style="position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(calc((8deg - var(--my,0) * 12deg) * var(--depth,1))) rotateY(calc((-16deg + var(--mx,0) * 22deg) * var(--depth,1))) translateZ(calc((var(--p,0.5) - 0.5) * 520px * var(--depth,1)));transition:transform 900ms cubic-bezier(.16,1,.3,1)">
           <div style="position:absolute;left:50%;top:50%;width:22em;height:13.75em;margin:-6.875em 0 0 -11em;transform:translate3d(10em,-12em,-12em);transform-style:preserve-3d">
             <div style="width:100%;height:100%;animation:hmFloat 7s ease-in-out -2s infinite alternate">
-              <div style="width:100%;height:100%;border-radius:24px;overflow:hidden;border:1px solid #303030;background:#121212;box-shadow:0 40px 80px -24px rgba(0,0,0,.9);animation:mxDeal 1.4s cubic-bezier(.16,1,.3,1) 700ms both"><video data-auto="1" src="media/v17.mp4" poster="media/p15.jpg" loop="" playsinline="" preload="metadata" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;display:block"></video></div>
+              <div style="width:100%;height:100%;border-radius:24px;overflow:hidden;border:1px solid #303030;background:#121212;box-shadow:0 40px 80px -24px rgba(0,0,0,.9);animation:mxDeal 1.4s cubic-bezier(.16,1,.3,1) 700ms both"><video data-auto="1" src="media/t-night-shift.mp4" poster="media/t-atlas-rail-2.jpg" loop="" playsinline="" preload="metadata" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;display:block"></video></div>
             </div>
           </div>
           <div style="position:absolute;left:50%;top:50%;width:22em;height:13.75em;margin:-6.875em 0 0 -11em;transform:translate3d(-9em,-8em,4em);transform-style:preserve-3d">
             <div style="width:100%;height:100%;animation:hmFloat 6s ease-in-out infinite alternate">
-              <div style="width:100%;height:100%;border-radius:24px;overflow:hidden;border:1px solid #303030;background:#121212;box-shadow:0 40px 80px -24px rgba(0,0,0,.9);animation:mxDeal 1.4s cubic-bezier(.16,1,.3,1) 400ms both"><video data-auto="1" src="media/v14.mp4" poster="media/p16.jpg" loop="" playsinline="" preload="metadata" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;display:block"></video></div>
+              <div style="width:100%;height:100%;border-radius:24px;overflow:hidden;border:1px solid #303030;background:#121212;box-shadow:0 40px 80px -24px rgba(0,0,0,.9);animation:mxDeal 1.4s cubic-bezier(.16,1,.3,1) 400ms both"><video data-auto="1" src="media/t-monsoon.mp4" poster="media/t-inkwell-3.jpg" loop="" playsinline="" preload="metadata" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;display:block"></video></div>
             </div>
           </div>
           <div style="position:absolute;left:50%;top:50%;width:22em;height:13.75em;margin:-6.875em 0 0 -11em;transform:translate3d(13em,3em,-4em);transform-style:preserve-3d">
             <div style="width:100%;height:100%;animation:hmFloat 8s ease-in-out -4s infinite alternate">
-              <div style="width:100%;height:100%;border-radius:24px;overflow:hidden;border:1px solid #303030;background:#121212;box-shadow:0 40px 80px -24px rgba(0,0,0,.9);animation:mxDeal 1.4s cubic-bezier(.16,1,.3,1) 550ms both"><video data-auto="1" src="media/v20.mp4" poster="media/p19.jpg" loop="" playsinline="" preload="metadata" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;display:block"></video></div>
+              <div style="width:100%;height:100%;border-radius:24px;overflow:hidden;border:1px solid #303030;background:#121212;box-shadow:0 40px 80px -24px rgba(0,0,0,.9);animation:mxDeal 1.4s cubic-bezier(.16,1,.3,1) 550ms both"><video data-auto="1" src="media/t-atlas-rail.mp4" poster="media/t-monsoon-3.jpg" loop="" playsinline="" preload="metadata" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;display:block"></video></div>
             </div>
           </div>
           <div style="position:absolute;left:50%;top:50%;width:22em;height:13.75em;margin:-6.875em 0 0 -11em;transform:translate3d(-12em,8em,-8em);transform-style:preserve-3d">
             <div style="width:100%;height:100%;animation:hmFloat 9s ease-in-out -1s infinite alternate">
-              <div style="width:100%;height:100%;border-radius:24px;overflow:hidden;border:1px solid #303030;background:#121212;box-shadow:0 40px 80px -24px rgba(0,0,0,.9);animation:mxDeal 1.4s cubic-bezier(.16,1,.3,1) 850ms both"><video data-auto="1" src="media/v10.mp4" poster="media/p10.jpg" loop="" playsinline="" preload="metadata" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;display:block"></video></div>
+              <div style="width:100%;height:100%;border-radius:24px;overflow:hidden;border:1px solid #303030;background:#121212;box-shadow:0 40px 80px -24px rgba(0,0,0,.9);animation:mxDeal 1.4s cubic-bezier(.16,1,.3,1) 850ms both"><video data-auto="1" src="media/t-atlas-rail.mp4" poster="media/t-atlas-rail-1.jpg" loop="" playsinline="" preload="metadata" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;display:block"></video></div>
             </div>
           </div>
           <div style="position:absolute;left:50%;top:50%;width:24em;height:15em;margin:-7.5em 0 0 -12em;transform:translate3d(1em,5em,14em);transform-style:preserve-3d">
             <div style="width:100%;height:100%;animation:hmFloat 6.5s ease-in-out -3s infinite alternate">
-              <div style="width:100%;height:100%;border-radius:24px;overflow:hidden;border:1px solid #3a3a3a;background:#121212;box-shadow:0 50px 100px -20px rgba(0,0,0,.95);animation:mxDeal 1.4s cubic-bezier(.16,1,.3,1) 250ms both"><video data-auto="1" src="media/v15.mp4" poster="media/p14.jpg" loop="" playsinline="" preload="metadata" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;display:block"></video></div>
+              <div style="width:100%;height:100%;border-radius:24px;overflow:hidden;border:1px solid #3a3a3a;background:#121212;box-shadow:0 50px 100px -20px rgba(0,0,0,.95);animation:mxDeal 1.4s cubic-bezier(.16,1,.3,1) 250ms both"><video data-auto="1" src="media/t-atlas-rail.mp4" poster="media/t-monsoon-2.jpg" loop="" playsinline="" preload="metadata" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;display:block"></video></div>
             </div>
           </div>
         </div>
@@ -159,7 +184,7 @@ input,select,textarea,button{font:inherit;color:inherit}
       </div>
       <div aria-hidden="true" style="position:absolute;inset:0;background:radial-gradient(ellipse 55% 45% at 50% 50%,rgba(0,0,0,.92),rgba(0,0,0,.55) 60%,rgba(0,0,0,0) 100%),linear-gradient(#000,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 78%,#000)"></div>
       <div data-reveal="1" style="position:relative;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:0 24px;text-align:center;opacity:var(--in,0);transform:translateY(calc((1 - var(--in,0)) * 40px));transition:opacity 1s,transform 1.2s cubic-bezier(.16,1,.3,1)">
-        <h2 style="margin:0;max-width:820px;font-size:calc(clamp(34px,5vw,64px) * var(--hs,1));line-height:1.02;letter-spacing:calc(var(--ht,1) * -.04em);font-weight:var(--hw,600);font-family:var(--hf,inherit);text-wrap:balance">114 directions, each a finished build you can watch before you copy it.</h2>
+        <h2 style="margin:0;max-width:820px;font-size:calc(clamp(34px,5vw,64px) * var(--hs,1));line-height:1.02;letter-spacing:calc(var(--ht,1) * -.04em);font-weight:var(--hw,600);font-family:var(--hf,inherit);text-wrap:balance">Original hero sections, each built from its own prompt.</h2>
         <p style="margin:0;color:#ababab;max-width:460px">Hero sections, full landing pages and 3D sites. New ones every week.</p>
       </div>
     </section>
@@ -168,7 +193,7 @@ input,select,textarea,button{font:inherit;color:inherit}
       <div style="position:sticky;top:0;height:100dvh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:40px">
         <div style="max-width:1280px;width:100%;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:12px">
           <h2 style="margin:0;font-size:calc(clamp(32px,4.4vw,56px) * var(--hs,1));line-height:1.04;letter-spacing:calc(var(--ht,1) * -.04em);font-weight:var(--hw,600);font-family:var(--hf,inherit);max-width:720px;text-wrap:balance">Start from a site you can already see.</h2>
-          <p style="margin:0;color:#ababab;max-width:520px">Every template is a recording of the real build, not a mockup of one.</p>
+          <p style="margin:0;color:#ababab;max-width:520px">Each preview is captured from the page its prompt produced.</p>
         </div>
         <div data-track="1" style="display:flex;gap:24px;width:max-content;padding:0 max(24px,calc((100vw - 1232px) / 2));transform:translate3d(calc(var(--p,0) * var(--dist,0px) * -1),0,0);will-change:transform">
           <sc-for list="{{ panCards }}" as="c" hint-placeholder-count="4">
@@ -211,11 +236,11 @@ input,select,textarea,button{font:inherit;color:inherit}
                   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-weight:600">Split Hero</span><span data-range="0.43,0.50" style="opacity:var(--lp,0);transform:scale(calc(0.6 + var(--lp,0) * 0.4));background:#e1e36b;color:#09090b;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700">Focus Zoom</span></div>
                   <div style="display:flex;gap:6px;flex-wrap:wrap"><span style="font-size:12px;color:#ababab;border:1px solid #303030;border-radius:999px;padding:2px 9px">H1</span><span style="font-size:12px;color:#ababab;border:1px solid #303030;border-radius:999px;padding:2px 9px">Lede</span><span style="font-size:12px;color:#ababab;border:1px solid #303030;border-radius:999px;padding:2px 9px">CTA pair</span><span style="font-size:12px;color:#ababab;border:1px solid #303030;border-radius:999px;padding:2px 9px">Media plate</span></div>
                 </div>
-                <img src="media/q08.jpg" alt="" style="filter:var(--mf,none);width:120px;height:84px;object-fit:cover;border-radius:14px;display:block"></img>
+                <img src="media/t-atlas-rail-2.jpg" alt="" style="filter:var(--mf,none);width:120px;height:84px;object-fit:cover;border-radius:14px;display:block"></img>
               </div>
               <div data-range="0.12,0.30" style="background:#121212;border:1px solid #303030;border-radius:20px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;opacity:calc(0.1 + var(--lp,0) * 0.9);transform:translate3d(calc((1 - var(--lp,0)) * -460px * var(--depth,1)),calc((1 - var(--lp,0)) * 60px * var(--depth,1)),calc((1 - var(--lp,0)) * 220px * var(--depth,1))) rotateX(calc((1 - var(--lp,0)) * 25deg * var(--depth,1))) rotateY(calc((1 - var(--lp,0)) * 50deg * var(--depth,1)))">
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-weight:600">Bento Grid</span><span data-range="0.46,0.53" style="opacity:var(--lp,0);transform:scale(calc(0.6 + var(--lp,0) * 0.4));background:#e1e36b;color:#09090b;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700">Scale In</span></div>
-                <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:6px;height:56px"><img src="media/q04.jpg" alt="" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;border-radius:10px;display:block"></img><img src="media/q05.jpg" alt="" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;border-radius:10px;display:block"></img><img src="media/q16.jpg" alt="" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;border-radius:10px;display:block"></img></div>
+                <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:6px;height:56px"><img src="media/t-inkwell-2.jpg" alt="" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;border-radius:10px;display:block"></img><img src="media/t-night-shift-2.jpg" alt="" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;border-radius:10px;display:block"></img><img src="media/t-quarry-4.jpg" alt="" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;border-radius:10px;display:block"></img></div>
               </div>
               <div data-range="0.17,0.35" style="background:#121212;border:1px solid #303030;border-radius:20px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;opacity:calc(0.1 + var(--lp,0) * 0.9);transform:translate3d(calc((1 - var(--lp,0)) * 440px * var(--depth,1)),calc((1 - var(--lp,0)) * 200px * var(--depth,1)),calc((1 - var(--lp,0)) * 340px * var(--depth,1))) rotateX(calc((1 - var(--lp,0)) * 35deg * var(--depth,1))) rotateY(calc((1 - var(--lp,0)) * -45deg * var(--depth,1)))">
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-weight:600">Pricing</span><span data-range="0.49,0.56" style="opacity:var(--lp,0);transform:scale(calc(0.6 + var(--lp,0) * 0.4));background:#e1e36b;color:#09090b;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700">Flip Up</span></div>
@@ -251,7 +276,7 @@ input,select,textarea,button{font:inherit;color:inherit}
           <h2 style="margin:0;font-size:calc(clamp(32px,4.4vw,56px) * var(--hs,1));line-height:1.04;letter-spacing:calc(var(--ht,1) * -.04em);font-weight:var(--hw,600);font-family:var(--hf,inherit);text-wrap:balance">Paste it into Claude. This is what comes back.</h2>
         </div>
         <div data-range="0.05,0.7" style="position:absolute;inset:0;border-radius:28px;overflow:hidden;transform:scale(calc(0.4 + var(--lp,0) * 0.6)) translateY(calc((1 - var(--lp,0)) * 12vh * var(--depth,1)));background:#121212">
-          <video data-auto="1" src="media/v19.mp4" poster="media/p17.jpg" loop="" playsinline="" preload="none" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;display:block"></video>
+          <video data-auto="1" src="media/t-monsoon.mp4" poster="media/t-night-shift-3.jpg" loop="" playsinline="" preload="none" style="filter:var(--mf,none);width:100%;height:100%;object-fit:cover;display:block"></video>
           <div style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0) 55%,rgba(0,0,0,.85))"></div>
         </div>
         <div data-range="0,0.12" style="position:absolute;top:calc(30vh - 20px);left:50%;z-index:3;transform:translate(-50%,calc(var(--lp,0) * 22vh)) scale(calc(1 - var(--lp,0) * 0.3));opacity:calc(1 - var(--lp,0));display:flex;align-items:center;gap:10px;background:#202020;border:1px solid #303030;border-radius:999px;padding:8px 16px 8px 8px;font-size:14px;white-space:nowrap">
@@ -259,8 +284,8 @@ input,select,textarea,button{font:inherit;color:inherit}
         </div>
         <div data-range="0.7,0.85" style="position:absolute;left:0;right:0;bottom:0;max-width:1280px;margin:0 auto;padding:0 24px 56px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;z-index:2;opacity:var(--lp,0);transform:translateY(calc((1 - var(--lp,0)) * 40px * var(--depth,1)))">
           <div style="display:flex;flex-direction:column;gap:6px">
-            <span style="font-size:clamp(28px,3.6vw,44px);line-height:1.05;letter-spacing:-.035em;font-weight:600">Eagle.</span>
-            <span style="color:#f5f5f5;max-width:420px">A golden eagle coming straight at the camera, rebuilt from one pasted prompt.</span>
+            <span style="font-size:clamp(28px,3.6vw,44px);line-height:1.05;letter-spacing:-.035em;font-weight:600">Monsoon.</span>
+            <span style="color:#f5f5f5;max-width:420px">A canvas rainstorm with a cursor umbrella, built from one pasted prompt.</span>
           </div>
           <a href="#library" onClick="{{ hNav.library }}" style="background:#f5f5f5;color:#09090b;border-radius:999px;padding:12px 20px;font-weight:600;white-space:nowrap" style-hover="color:#09090b;transform:translateY(-1px)">Browse the library</a>
         </div>
@@ -274,32 +299,32 @@ input,select,textarea,button{font:inherit;color:inherit}
       </div>
       <div data-reveal="1" style="display:flex;flex-wrap:wrap;gap:16px;opacity:var(--in,0);transform:translateY(calc((1 - var(--in,0)) * 60px));transition:opacity 1s,transform 1.2s cubic-bezier(.16,1,.3,1)">
         <div style="flex:2 1 520px;min-height:520px;position:relative;border-radius:28px;overflow:hidden;border:1px solid #303030;background:#121212">
-          <video data-auto="1" src="media/v01.mp4" poster="media/p01.jpg" loop="" playsinline="" preload="none" style="filter:var(--mf,none);position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:mxBlurLoop 5s cubic-bezier(.16,1,.3,1) infinite"></video>
+          <video data-auto="1" src="media/t-inkwell.mp4" poster="media/t-inkwell.jpg" loop="" playsinline="" preload="none" style="filter:var(--mf,none);position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:mxBlurLoop 5s cubic-bezier(.16,1,.3,1) infinite"></video>
           <div style="position:absolute;inset:auto 0 0 0;padding:20px 22px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.88));display:flex;flex-direction:column;gap:4px"><span style="font-size:20px;font-weight:600">Blur In</span><span style="font-size:13px;color:#ababab">blur(12px) to 0 with scale 1.08 to 1, 900ms, 120ms stagger</span></div>
         </div>
         <div style="flex:1 1 320px;display:flex;flex-direction:column;gap:16px">
           <div style="flex:1;min-height:252px;position:relative;border-radius:28px;overflow:hidden;border:1px solid #303030;background:#121212">
-            <img src="media/q03.jpg" alt="" loading="lazy" style="filter:var(--mf,none);position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:mxWipeLoop 4.5s cubic-bezier(.77,0,.175,1) infinite"></img>
+            <img src="media/t-atlas-rail-1.jpg" alt="" loading="lazy" style="filter:var(--mf,none);position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:mxWipeLoop 4.5s cubic-bezier(.77,0,.175,1) infinite"></img>
             <div style="position:absolute;inset:auto 0 0 0;padding:18px 20px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.88));display:flex;flex-direction:column;gap:4px"><span style="font-size:18px;font-weight:600">Wipe Right</span><span style="font-size:13px;color:#ababab">inset mask, left to right, 850ms</span></div>
           </div>
           <div style="flex:1;display:flex;flex-wrap:wrap;gap:16px">
             <div style="flex:1 1 150px;min-height:252px;position:relative;border-radius:28px;overflow:hidden;border:1px solid #303030;background:#121212;padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;perspective:600px">
               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
-                <img src="media/q04.jpg" alt="" loading="lazy" style="filter:var(--mf,none);width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;transform-origin:50% 100%;animation:mxFlipLoop 4s cubic-bezier(.22,1,.36,1) infinite"></img>
-                <img src="media/q05.jpg" alt="" loading="lazy" style="filter:var(--mf,none);width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;transform-origin:50% 100%;animation:mxFlipLoop 4s cubic-bezier(.22,1,.36,1) 90ms infinite"></img>
-                <img src="media/q16.jpg" alt="" loading="lazy" style="filter:var(--mf,none);width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;transform-origin:50% 100%;animation:mxFlipLoop 4s cubic-bezier(.22,1,.36,1) 180ms infinite"></img>
+                <img src="media/t-inkwell-2.jpg" alt="" loading="lazy" style="filter:var(--mf,none);width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;transform-origin:50% 100%;animation:mxFlipLoop 4s cubic-bezier(.22,1,.36,1) infinite"></img>
+                <img src="media/t-night-shift-2.jpg" alt="" loading="lazy" style="filter:var(--mf,none);width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;transform-origin:50% 100%;animation:mxFlipLoop 4s cubic-bezier(.22,1,.36,1) 90ms infinite"></img>
+                <img src="media/t-quarry-4.jpg" alt="" loading="lazy" style="filter:var(--mf,none);width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;transform-origin:50% 100%;animation:mxFlipLoop 4s cubic-bezier(.22,1,.36,1) 180ms infinite"></img>
               </div>
               <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:18px;font-weight:600">Flip Up</span><span style="font-size:13px;color:#ababab">rotateX(-70deg) to 0, 90ms stagger</span></div>
             </div>
             <div style="flex:1 1 150px;min-height:252px;position:relative;border-radius:28px;overflow:hidden;border:1px solid #303030;background:#121212">
-              <img src="media/q01.jpg" alt="" loading="lazy" style="filter:var(--mf,none);position:absolute;left:0;top:-20%;width:100%;height:140%;object-fit:cover;transform:translateY(calc((var(--p,0.5) - 0.5) * -80px))"></img>
+              <img src="media/t-quarry-1.jpg" alt="" loading="lazy" style="filter:var(--mf,none);position:absolute;left:0;top:-20%;width:100%;height:140%;object-fit:cover;transform:translateY(calc((var(--p,0.5) - 0.5) * -80px))"></img>
               <span aria-hidden="true" style="position:absolute;left:16px;top:28%;font-size:34px;line-height:1;font-weight:800;letter-spacing:-.04em;color:#09090b;transform:translateY(calc((var(--p,0.5) - 0.5) * -260px))">INTO THE SOUND</span>
               <div style="position:absolute;inset:auto 0 0 0;padding:16px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.88));display:flex;flex-direction:column;gap:4px"><span style="font-size:18px;font-weight:600">Parallax Layers</span><span style="font-size:13px;color:#ababab">layers at 0.2x and 0.6x scroll</span></div>
             </div>
           </div>
         </div>
         <div style="flex:1 1 100%;min-height:260px;position:relative;border-radius:28px;overflow:hidden;border:1px solid #303030;background:#121212;display:flex;align-items:center;padding:32px">
-          <img src="media/p03.jpg" alt="" loading="lazy" style="filter:var(--mf,none);position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55"></img>
+          <img src="media/t-quarry.jpg" alt="" loading="lazy" style="filter:var(--mf,none);position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55"></img>
           <div style="position:relative;display:flex;flex-direction:column;gap:12px">
             <div style="display:flex;align-items:center;gap:4px"><span style="font-size:clamp(36px,6vw,72px);line-height:1;letter-spacing:-.045em;font-weight:600;white-space:nowrap;animation:mxTypeLoop 5s steps(20) infinite">Weight you can feel.</span><span style="width:4px;height:clamp(36px,6vw,64px);background:#e1e36b;animation:mxCaret .9s steps(1) infinite"></span></div>
             <span style="font-size:13px;color:#f5f5f5"><strong style="font-weight:600">Typewriter</strong>, steps(n) over 2.2s with a blinking caret</span>
@@ -318,8 +343,9 @@ input,select,textarea,button{font:inherit;color:inherit}
       </div>
     </section>
   
+    </main>
     <footer data-hscene="enter" data-screen-label="Footer" style="position:relative;overflow:hidden;padding-top:46vh">
-      <video data-auto="1" src="media/v12.mp4" poster="media/p12.jpg" loop="" playsinline="" preload="none" aria-hidden="true" style="filter:var(--mf,none);position:absolute;left:0;top:0;width:100%;height:70vh;object-fit:cover;transform:translateY(calc((1 - var(--p,1)) * -60px)) scale(calc(1.15 - var(--p,1) * 0.15))"></video>
+      <video data-auto="1" src="media/t-night-shift.mp4" poster="media/t-night-shift-2.jpg" loop="" playsinline="" preload="none" aria-hidden="true" style="filter:var(--mf,none);position:absolute;left:0;top:0;width:100%;height:70vh;object-fit:cover;transform:translateY(calc((1 - var(--p,1)) * -60px)) scale(calc(1.15 - var(--p,1) * 0.15))"></video>
       <div aria-hidden="true" style="position:absolute;left:0;top:0;width:100%;height:70vh;background:linear-gradient(#000,rgba(0,0,0,.2) 30%,rgba(0,0,0,.4) 60%,#000)"></div>
       <div style="position:relative;max-width:1280px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:32px">
         <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:14px;font-weight:600">Product</span><a href="#library" onClick="{{ hNav.library }}" style="color:#ababab;font-size:14px">Library</a><a href="#components" onClick="{{ hNav.components }}" style="color:#ababab;font-size:14px">Components</a><a href="#builder" onClick="{{ hNav.builder }}" style="color:#ababab;font-size:14px">Builder</a></div>
@@ -340,11 +366,10 @@ input,select,textarea,button{font:inherit;color:inherit}
   <sc-if value="{{ notHome }}" hint-placeholder-val="{{ false }}">
   <sc-if value="{{ bannerOn }}" hint-placeholder-val="{{ true }}">
     <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:8px 16px;background:#e1e36b;color:#09090b;font-size:13px;line-height:18px;font-weight:600">
-      <span style="letter-spacing:.08em;text-transform:uppercase">Regional pricing</span>
-      <span>$39 → $29/month, 26% off</span>
-      <span style="font-variant-numeric:tabular-nums;opacity:.75">{{ countdown }} left</span>
-      <button onClick="{{ openPaywall }}" style="background:#09090b;color:#f5f5f5;border:none;border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer">Get access →</button>
-      <button onClick="{{ closeBanner }}" aria-label="Dismiss pricing banner" style="background:none;border:none;color:#09090b;cursor:pointer;font-size:16px;padding:0 4px">×</button>
+      <span style="letter-spacing:.08em;text-transform:uppercase">New</span>
+      <span>{{ bannerText }}</span>
+      <button onClick="{{ goLibrary }}" style="background:#09090b;color:#f5f5f5;border:none;border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer">Browse the library →</button>
+      <button onClick="{{ closeBanner }}" aria-label="Dismiss announcement" style="background:none;border:none;color:#09090b;cursor:pointer;font-size:16px;padding:0 4px">×</button>
     </div>
   </sc-if>
   <header data-hdr="1" onMouseLeave="{{ closeMega }}" style="position:sticky;top:0;z-index:20;background:rgba(0,0,0,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #202020">
@@ -356,7 +381,7 @@ input,select,textarea,button{font:inherit;color:inherit}
           <g data-cue-dot="1" style="transform-origin:16px 16px"><circle cx="16" cy="16" r="4" fill="#e1e36b"></circle></g>
         </svg>Cue
       </a>
-      <nav aria-label="Primary" style="display:flex;gap:4px;flex:1 1 auto;flex-wrap:nowrap;min-width:0">
+      <nav aria-label="Primary" class="nav-links" style="display:flex;gap:4px;flex:1 1 auto;flex-wrap:nowrap;min-width:0">
         <sc-for list="{{ tabs }}" as="tab" hint-placeholder-count="4">
           <sc-if value="{{ tab.active }}">
             <button onClick="{{ tab.go }}" onMouseEnter="{{ tab.hover }}" onFocus="{{ tab.hover }}" aria-current="page" style="background:#202020;border:1px solid #303030;color:#f5f5f5;border-radius:999px;padding:6px 14px;font-size:14px;cursor:pointer">{{ tab.label }}</button>
@@ -367,7 +392,7 @@ input,select,textarea,button{font:inherit;color:inherit}
         </sc-for>
       </nav>
       <button onClick="{{ openPal }}" aria-label="Search, Command K" style="display:flex;align-items:center;justify-content:center;gap:10px;flex:{{ searchFlex }};min-width:36px;height:36px;overflow:hidden;background:#121212;border:1px solid #303030;border-radius:999px;padding:6px 8px 6px 14px;font-size:14px;color:#ababab;cursor:pointer;text-align:left;transition:border-color 150ms" style-hover="border-color:#ababab"><sc-if value="{{ wideHdr }}" hint-placeholder-val="{{ true }}"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Search templates, sections…</span><span style="margin-left:auto;font-size:11px;border:1px solid #303030;border-radius:999px;padding:1px 8px;flex-shrink:0">⌘K</span></sc-if><sc-if value="{{ narrowHdr }}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="flex-shrink:0"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" fill="none"></circle><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></sc-if></button>
-      <button onClick="{{ goBuilder }}" style="display:flex;align-items:center;gap:8px;background:#121212;border:1px solid #303030;border-radius:999px;padding:6px 8px 6px 14px;font-size:14px;cursor:pointer;color:#f5f5f5">Page stack <span style="background:#e1e36b;color:#09090b;border-radius:999px;min-width:22px;height:22px;display:grid;place-items:center;font-size:12px;font-weight:700">{{ stackCount }}</span></button>
+      <button onClick="{{ goBuilder }}" class="hide-sm" style="display:flex;align-items:center;gap:8px;background:#121212;border:1px solid #303030;border-radius:999px;padding:6px 8px 6px 14px;font-size:14px;cursor:pointer;color:#f5f5f5">Page stack <span style="background:#e1e36b;color:#09090b;border-radius:999px;min-width:22px;height:22px;display:grid;place-items:center;font-size:12px;font-weight:700">{{ stackCount }}</span></button>
       <sc-if value="{{ notPro }}" hint-placeholder-val="{{ true }}"><button onClick="{{ openPaywall }}" style="background:#e1e36b;color:#09090b;border:none;border-radius:999px;padding:8px 16px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:rgba(255,255,255,.15) -4px -4px 8px 0 inset,rgba(255,255,255,.15) 4px 4px 4px 0 inset;transition:transform 150ms" style-hover="transform:translateY(-1px)" style-active="transform:translateY(1px)">Get access →</button></sc-if>
       <sc-if value="{{ isPro }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:1px solid #e1e36b;color:#e1e36b;border-radius:999px;padding:4px 12px">Full access</span></sc-if>
     </div>
@@ -398,12 +423,12 @@ input,select,textarea,button{font:inherit;color:inherit}
   </sc-if>
 
   <sc-if value="{{ isLibrary }}" hint-placeholder-val="{{ false }}">
-    <main style="max-width:1280px;margin:0 auto;padding:56px 24px 0">
+    <main id="main" tabindex="-1" style="max-width:1280px;margin:0 auto;padding:56px 24px 0">
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:32px;align-items:end">
         <div style="display:flex;flex-direction:column;gap:16px">
           <span style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#e1e36b;font-weight:600">The library</span>
           <h1 style="animation:mxRiseL 1s cubic-bezier(.16,1,.3,1) 80ms both;margin:0;font-size:clamp(36px,6vw,56px);line-height:1.02;letter-spacing:-.035em;font-weight:600;text-wrap:balance">Animated hero section templates</h1>
-          <p style="animation:mxRiseL 1s cubic-bezier(.16,1,.3,1) 200ms both;margin:0;color:#ababab;max-width:620px;text-wrap:pretty">A hero section is the only part of a landing page every visitor sees. Every template here is a scroll-driven build around motion rather than a static image, and each ships with the prompt that generates it, so you can paste it into Claude, Cursor or v0 and get working code.</p>
+          <p style="animation:mxRiseL 1s cubic-bezier(.16,1,.3,1) 200ms both;margin:0;color:#ababab;max-width:620px;text-wrap:pretty">Hero sections built around motion: scroll scenes, stop-motion, cursor effects and live canvas. Each one comes with the prompt that built it, ready for Claude, Cursor or v0.</p>
         </div>
         <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
           <button onClick="{{ goWhy }}" style="display:flex;align-items:center;gap:14px;background:#121212;border:1px solid #303030;border-radius:24px;padding:10px 18px 10px 10px;cursor:pointer;color:#f5f5f5;text-align:left;transition:border-color 300ms" style-hover="border-color:#e1e36b">
@@ -539,7 +564,7 @@ input,select,textarea,button{font:inherit;color:inherit}
   </sc-if>
 
   <sc-if value="{{ isComponents }}">
-    <main style="max-width:1280px;margin:0 auto;padding:48px 24px 0;display:flex;flex-direction:column;gap:28px">
+    <main id="main" tabindex="-1" style="max-width:1280px;margin:0 auto;padding:48px 24px 0;display:flex;flex-direction:column;gap:28px">
       <div style="display:flex;flex-direction:column;gap:12px;max-width:720px">
         <span style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#e1e36b;font-weight:600">Component library</span>
         <h1 style="animation:mxRiseL 1s cubic-bezier(.16,1,.3,1) 80ms both;margin:0;font-size:clamp(32px,5vw,48px);line-height:1.05;letter-spacing:-.03em;font-weight:600">Pick a section. Pick how it moves.</h1>
@@ -584,7 +609,18 @@ input,select,textarea,button{font:inherit;color:inherit}
               <button onClick="{{ addComp }}" style="background:#e1e36b;color:#09090b;border:none;border-radius:999px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:rgba(255,255,255,.15) -4px -4px 8px 0 inset,rgba(255,255,255,.15) 4px 4px 4px 0 inset">+ Add to page</button>
             </div>
           </div>
-          <div style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:19px;color:#ababab;background:#121212;border:1px solid #303030;border-radius:20px;padding:14px 16px"><span style="color:#e1e36b">layout</span> {{ cur.spec }}<br /><span style="color:#e1e36b">motion</span> {{ curAnim.spec }}</div>
+          <div style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:19px;color:#ababab;background:#121212;border:1px solid #303030;border-radius:20px;padding:14px 16px"><span style="color:#e1e36b">layout</span> {{ cur.spec }}<br /><span style="color:#e1e36b">motion</span> {{ curAnim.spec }}<sc-if value="{{ tuneOn }}" hint-placeholder-val="{{ false }}"><br /><span style="color:#e1e36b">timing</span> {{ tuneSpec }}</sc-if></div>
+          <div aria-label="Customize animation" role="group" style="display:flex;flex-direction:column;gap:16px;background:#121212;border:1px solid #303030;border-radius:20px;padding:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">Customize</span><button onClick="{{ resetTune }}" style="background:none;border:none;color:#ababab;font-size:13px;cursor:pointer;padding:6px 8px" style-hover="color:#f5f5f5">Reset</button></div>
+            <label style="display:grid;grid-template-columns:72px 1fr 56px;align-items:center;gap:12px;font-size:13px;color:#ababab">Speed<input type="range" min="0.5" max="2" step="0.1" value="{{ tune.speed }}" onChange="{{ setSpeed }}" aria-label="Animation speed" style="accent-color:#e1e36b;width:100%"><span style="text-align:right;color:#f5f5f5;font-variant-numeric:tabular-nums">{{ tuneSpeedLabel }}</span></label>
+            <label style="display:grid;grid-template-columns:72px 1fr 56px;align-items:center;gap:12px;font-size:13px;color:#ababab">Delay<input type="range" min="0" max="1000" step="50" value="{{ tune.delay }}" onChange="{{ setDelay }}" aria-label="Start delay" style="accent-color:#e1e36b;width:100%"><span style="text-align:right;color:#f5f5f5;font-variant-numeric:tabular-nums">{{ tuneDelayLabel }}</span></label>
+            <div style="display:grid;grid-template-columns:72px 1fr;align-items:center;gap:12px;font-size:13px;color:#ababab"><span>Easing</span><div role="radiogroup" aria-label="Easing" style="display:flex;flex-wrap:wrap;gap:6px">
+              <sc-for list="{{ eases }}" as="ez" hint-placeholder-count="6">
+                <sc-if value="{{ ez.active }}"><button role="radio" aria-checked="true" onClick="{{ ez.pick }}" style="background:#e1e36b;color:#09090b;border:1px solid #e1e36b;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer">{{ ez.label }}</button></sc-if>
+                <sc-if value="{{ ez.inactive }}"><button role="radio" aria-checked="false" onClick="{{ ez.pick }}" style="background:#202020;color:#f5f5f5;border:1px solid #303030;border-radius:999px;padding:6px 12px;font-size:12px;cursor:pointer" style-hover="border-color:#ababab">{{ ez.label }}</button></sc-if>
+              </sc-for>
+            </div></div>
+          </div>
         </section>
 
         <aside aria-label="Animation library" data-reveal="1" style="opacity:var(--in,0);transform:translateX(calc((1 - var(--in,0)) * 40px));transition:opacity .8s ease,transform 1s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;gap:8px;background:#121212;border:1px solid #303030;border-radius:24px;padding:16px">
@@ -606,7 +642,7 @@ input,select,textarea,button{font:inherit;color:inherit}
   </sc-if>
 
   <sc-if value="{{ isBuilder }}">
-    <main style="max-width:1280px;margin:0 auto;padding:48px 24px 0;display:flex;flex-direction:column;gap:28px">
+    <main id="main" tabindex="-1" style="max-width:1280px;margin:0 auto;padding:48px 24px 0;display:flex;flex-direction:column;gap:28px">
       <div style="display:flex;flex-direction:column;gap:12px;max-width:720px">
         <span style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#e1e36b;font-weight:600">Prompt builder</span>
         <h1 style="animation:mxRiseL 1s cubic-bezier(.16,1,.3,1) 80ms both;margin:0;font-size:clamp(32px,5vw,48px);line-height:1.05;letter-spacing:-.03em;font-weight:600">Describe the page. We write the blueprint.</h1>
@@ -700,27 +736,27 @@ input,select,textarea,button{font:inherit;color:inherit}
   </sc-if>
 
   <sc-if value="{{ isWhy }}">
-    <main style="max-width:1080px;margin:0 auto;padding:64px 24px 0;display:flex;flex-direction:column;gap:112px">
+    <main id="main" tabindex="-1" style="max-width:1080px;margin:0 auto;padding:64px 24px 0;display:flex;flex-direction:column;gap:112px">
       <section style="display:flex;flex-direction:column;gap:20px;max-width:820px">
-        <h1 style="animation:mxRiseL 1s cubic-bezier(.16,1,.3,1) 80ms both;margin:0;font-size:clamp(34px,5.5vw,56px);line-height:1.04;letter-spacing:-.035em;font-weight:600;text-wrap:balance">“Why would I pay for a prompt when I can just ask Claude to build it myself?”</h1>
-        <p style="animation:mxRiseL 1s cubic-bezier(.16,1,.3,1) 200ms both;margin:0;color:#ababab;font-size:18px;line-height:28px">It is the right question. Here is the whole answer, start to finish, so you can judge for yourself.</p>
+        <h1 style="animation:mxRiseL 1s cubic-bezier(.16,1,.3,1) 80ms both;margin:0;font-size:clamp(34px,5.5vw,56px);line-height:1.04;letter-spacing:-.035em;font-weight:600;text-wrap:balance">You can ask Claude for a website. Getting the one you pictured is harder.</h1>
+        <p style="animation:mxRiseL 1s cubic-bezier(.16,1,.3,1) 200ms both;margin:0;color:#ababab;font-size:18px;line-height:28px">Here is where a one-line request falls short, and what a full build prompt adds.</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button onClick="{{ goPlans }}" style="background:#e1e36b;color:#09090b;border:none;border-radius:999px;padding:12px 20px;font-weight:600;cursor:pointer">Get access →</button>
-          <button onClick="{{ goLibrary }}" style="background:#202020;border:1px solid #303030;border-radius:999px;padding:12px 20px;cursor:pointer">Browse it first →</button>
+          <button onClick="{{ goLibrary }}" style="background:#202020;border:1px solid #303030;border-radius:999px;padding:12px 20px;cursor:pointer">See the library →</button>
         </div>
       </section>
 
       <section data-reveal="1" style="opacity:var(--in,0);transform:translateY(calc((1 - var(--in,0)) * 48px));transition:opacity .9s ease,transform 1.1s cubic-bezier(.16,1,.3,1);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:40px;align-items:start">
         <div style="display:flex;flex-direction:column;gap:14px">
-          <h2 style="margin:0;font-size:30px;line-height:1.15;letter-spacing:-.025em;font-weight:600">So you open Claude and describe it.</h2>
-          <p style="margin:0;color:#ababab">You get something that works. It just isn't the website that was in your head.</p>
-          <sc-if value="{{ chatDone }}"><p style="margin:0;font-size:18px;line-height:27px;animation:mxRise 300ms ease both">And Claude has not done a single thing wrong. It did exactly what it was told.</p></sc-if>
+          <h2 style="margin:0;font-size:30px;line-height:1.15;letter-spacing:-.025em;font-weight:600">A short request gets a generic page.</h2>
+          <p style="margin:0;color:#ababab">The page runs. The layout, type and motion are whatever the model guessed.</p>
+          <sc-if value="{{ chatDone }}"><p style="margin:0;font-size:18px;line-height:27px;animation:mxRise 300ms ease both">Each follow-up fixes one thing and moves another.</p></sc-if>
         </div>
         <div style="background:#121212;border:1px solid #303030;border-radius:28px;overflow:hidden">
           <div style="display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #303030;font-size:12px;color:#ababab"><span>New chat</span><span style="font-variant-numeric:tabular-nums">{{ chatEdits }} edits</span></div>
           <div style="height:2px;background:#202020"><div style="height:2px;background:#e1e36b;width:{{ chatPct }};transition:width 300ms"></div></div>
           <div style="padding:16px;display:flex;flex-direction:column;gap:8px;height:360px;overflow:hidden;justify-content:flex-end">
-            <div style="align-self:flex-end;background:#202020;border-radius:18px 18px 4px 18px;padding:8px 14px;font-size:14px;max-width:85%">Build me a premium animated website like this one.</div>
+            <div style="align-self:flex-end;background:#202020;border-radius:18px 18px 4px 18px;padding:8px 14px;font-size:14px;max-width:85%">Make me an animated landing page for my brand.</div>
             <sc-for list="{{ chatLines }}" as="m" hint-placeholder-count="0">
               <div style="align-self:flex-end;background:#202020;border-radius:18px 18px 4px 18px;padding:6px 12px;font-size:13px;color:#f5f5f5;animation:mxRise 300ms ease both">{{ m.t }}</div>
             </sc-for>
@@ -729,9 +765,9 @@ input,select,textarea,button{font:inherit;color:inherit}
       </section>
 
       <section data-reveal="1" style="opacity:var(--in,0);transform:translateY(calc((1 - var(--in,0)) * 48px));transition:opacity .9s ease,transform 1.1s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;gap:20px">
-        <span style="font-size:13px;color:#e1e36b">The actual problem</span>
-        <h2 style="margin:0;font-size:clamp(28px,4vw,44px);line-height:1.08;letter-spacing:-.03em;font-weight:600;max-width:820px">Claude knows how to code. It cannot see the website inside your head.</h2>
-        <p style="margin:0;color:#ababab;max-width:640px">That is the entire gap. The model lacks a description, not capability. The model will build whatever it is given a clear picture of, and a sentence is not a clear picture.</p>
+        <span style="font-size:13px;color:#e1e36b">What the model is missing</span>
+        <h2 style="margin:0;font-size:clamp(28px,4vw,44px);line-height:1.08;letter-spacing:-.03em;font-weight:600;max-width:820px">The model can write the code. It needs the decisions.</h2>
+        <p style="margin:0;color:#ababab;max-width:640px">A build prompt spells out every choice before any code is written: what goes where, which typeface, how each element moves and when it stops.</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <span style="border:1px dashed #303030;border-radius:999px;padding:10px 20px;font-size:18px;color:#ababab">Layout</span>
           <span style="border:1px dashed #303030;border-radius:999px;padding:10px 20px;font-size:18px;color:#ababab">Typography</span>
@@ -739,49 +775,49 @@ input,select,textarea,button{font:inherit;color:inherit}
           <span style="border:1px dashed #303030;border-radius:999px;padding:10px 20px;font-size:18px;color:#ababab">Depth</span>
           <span style="border:1px dashed #303030;border-radius:999px;padding:10px 20px;font-size:18px;color:#ababab">Restraint</span>
         </div>
-        <p style="margin:0;max-width:640px">Leave those blank and you get a website that works and still looks like every other AI-generated website.</p>
+        <p style="margin:0;max-width:640px">Each CUE prompt covers all five, for every section.</p>
       </section>
 
       <section data-reveal="1" style="opacity:var(--in,0);transform:translateY(calc((1 - var(--in,0)) * 48px));transition:opacity .9s ease,transform 1.1s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;gap:24px">
-        <h2 style="margin:0;font-size:clamp(28px,4vw,44px);line-height:1.08;letter-spacing:-.03em;font-weight:600">Five steps, and one of them is “paste”.</h2>
+        <h2 style="margin:0;font-size:clamp(28px,4vw,44px);line-height:1.08;letter-spacing:-.03em;font-weight:600">How a build goes</h2>
         <ol style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
-          <li data-reveal="1" style="opacity:var(--in,0);transform:perspective(800px) rotateX(calc((1 - var(--in,0)) * -60deg));transform-origin:50% 100%;transition:opacity .7s ease,transform .9s cubic-bezier(.22,1,.36,1);background:#121212;border:1px solid #303030;border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:8px"><span style="color:#e1e36b;font-size:13px">01</span><strong style="font-weight:600">Find a design you like</strong><span style="font-size:14px;line-height:21px;color:#ababab">Browse the library and stop at the one that makes you think: yeah, something like that.</span></li>
-          <li data-reveal="1" style="opacity:var(--in,0);transform:perspective(800px) rotateX(calc((1 - var(--in,0)) * -60deg));transform-origin:50% 100%;transition:opacity .7s ease,transform .9s cubic-bezier(.22,1,.36,1);background:#121212;border:1px solid #303030;border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:8px"><span style="color:#e1e36b;font-size:13px">02</span><strong style="font-weight:600">Open the template</strong><span style="font-size:14px;line-height:21px;color:#ababab">Watch the preview. It is a recording of the real build, not a mockup of one.</span></li>
-          <li data-reveal="1" style="opacity:var(--in,0);transform:perspective(800px) rotateX(calc((1 - var(--in,0)) * -60deg));transform-origin:50% 100%;transition:opacity .7s ease,transform .9s cubic-bezier(.22,1,.36,1);background:#121212;border:1px solid #303030;border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:8px"><span style="color:#e1e36b;font-size:13px">03</span><strong style="font-weight:600">Copy the build prompt</strong><span style="font-size:14px;line-height:21px;color:#ababab">The complete one. Layout, type, motion, section by section, not a one-line description.</span></li>
-          <li data-reveal="1" style="opacity:var(--in,0);transform:perspective(800px) rotateX(calc((1 - var(--in,0)) * -60deg));transform-origin:50% 100%;transition:opacity .7s ease,transform .9s cubic-bezier(.22,1,.36,1);background:#121212;border:1px solid #303030;border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:8px"><span style="color:#e1e36b;font-size:13px">04</span><strong style="font-weight:600">Paste it into Claude</strong><span style="font-size:14px;line-height:21px;color:#ababab">Or Cursor, or whatever you already use. The prompt does not assume a particular model.</span></li>
-          <li data-reveal="1" style="opacity:var(--in,0);transform:perspective(800px) rotateX(calc((1 - var(--in,0)) * -60deg));transform-origin:50% 100%;transition:opacity .7s ease,transform .9s cubic-bezier(.22,1,.36,1);background:#121212;border:1px solid #303030;border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:8px"><span style="color:#e1e36b;font-size:13px">05</span><strong style="font-weight:600">Make it yours</strong><span style="font-size:14px;line-height:21px;color:#ababab">Keep talking to the AI. Change the copy, the colours, the sections, anything. It is your codebase now.</span></li>
+          <li data-reveal="1" style="opacity:var(--in,0);transform:perspective(800px) rotateX(calc((1 - var(--in,0)) * -60deg));transform-origin:50% 100%;transition:opacity .7s ease,transform .9s cubic-bezier(.22,1,.36,1);background:#121212;border:1px solid #303030;border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:8px"><span style="color:#e1e36b;font-size:13px">01</span><strong style="font-weight:600">Pick a hero</strong><span style="font-size:14px;line-height:21px;color:#ababab">Filter the library by category or motion and open one.</span></li>
+          <li data-reveal="1" style="opacity:var(--in,0);transform:perspective(800px) rotateX(calc((1 - var(--in,0)) * -60deg));transform-origin:50% 100%;transition:opacity .7s ease,transform .9s cubic-bezier(.22,1,.36,1);background:#121212;border:1px solid #303030;border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:8px"><span style="color:#e1e36b;font-size:13px">02</span><strong style="font-weight:600">Watch it run</strong><span style="font-size:14px;line-height:21px;color:#ababab">Hover the card to play the preview, or open the live demo.</span></li>
+          <li data-reveal="1" style="opacity:var(--in,0);transform:perspective(800px) rotateX(calc((1 - var(--in,0)) * -60deg));transform-origin:50% 100%;transition:opacity .7s ease,transform .9s cubic-bezier(.22,1,.36,1);background:#121212;border:1px solid #303030;border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:8px"><span style="color:#e1e36b;font-size:13px">03</span><strong style="font-weight:600">Copy the build prompt</strong><span style="font-size:14px;line-height:21px;color:#ababab">Layout, type, colour and every animation, with exact timings.</span></li>
+          <li data-reveal="1" style="opacity:var(--in,0);transform:perspective(800px) rotateX(calc((1 - var(--in,0)) * -60deg));transform-origin:50% 100%;transition:opacity .7s ease,transform .9s cubic-bezier(.22,1,.36,1);background:#121212;border:1px solid #303030;border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:8px"><span style="color:#e1e36b;font-size:13px">04</span><strong style="font-weight:600">Paste it in</strong><span style="font-size:14px;line-height:21px;color:#ababab">Claude, Cursor or v0. The prompt is plain text.</span></li>
+          <li data-reveal="1" style="opacity:var(--in,0);transform:perspective(800px) rotateX(calc((1 - var(--in,0)) * -60deg));transform-origin:50% 100%;transition:opacity .7s ease,transform .9s cubic-bezier(.22,1,.36,1);background:#121212;border:1px solid #303030;border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:8px"><span style="color:#e1e36b;font-size:13px">05</span><strong style="font-weight:600">Make it yours</strong><span style="font-size:14px;line-height:21px;color:#ababab">Swap in your copy, colours and images. The code is yours.</span></li>
         </ol>
       </section>
 
       <section id="plans" data-reveal="1" style="opacity:var(--in,0);transform:translateY(calc((1 - var(--in,0)) * 48px));transition:opacity .9s ease,transform 1.1s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;gap:24px">
         <div style="display:flex;flex-direction:column;gap:12px;max-width:720px">
           <h2 style="margin:0;font-size:clamp(32px,5vw,56px);line-height:1.02;letter-spacing:-.035em;font-weight:600">Get access</h2>
-          <p style="margin:0;color:#ababab">Start from a direction instead of a blank chat. One library on every plan, for personal and client work. The 3D collection is included with Yearly and Lifetime.</p>
-          <span style="font-size:14px;color:#ababab"><span style="color:#e1e36b;letter-spacing:2px">★★★★★</span> 13,500+ builders shipping, new templates every week</span>
+          <p style="margin:0;color:#ababab">Every plan opens the full library and the Quick Build editor, for personal and client work.</p>
+          <span style="font-size:13px;color:#ababab">New templates added every week.</span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px;align-items:stretch">
           <div data-tilt="8" style="transform:perspective(1000px) rotateX(calc(var(--ty,0) * 1deg)) rotateY(calc(var(--tx,0) * 1deg));transition:transform 500ms cubic-bezier(.16,1,.3,1);background:#121212;border:1px solid #303030;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:14px">
-            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:18px;font-weight:600">Monthly</span><span style="font-size:12px;border:1px solid #303030;border-radius:999px;padding:2px 10px;color:#ababab">26% off</span></div>
-            <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:56px;line-height:1;font-weight:600;letter-spacing:-.04em">$29</span><span style="color:#ababab">/ month</span><s style="color:#ababab;font-size:14px">$39</s></div>
-            <span style="font-size:13px;color:#ababab">Renews at $29 every month · cancel anytime</span>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:18px;font-weight:600">Monthly</span></div>
+            <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:56px;line-height:1;font-weight:600;letter-spacing:-.04em">$29</span><span style="color:#ababab">/ month</span></div>
+            <span style="font-size:13px;color:#ababab">Billed monthly. Cancel from your account.</span>
             <button onClick="{{ goBuilder }}" style="background:#202020;border:1px solid #303030;border-radius:999px;padding:12px;font-weight:600;cursor:pointer">Get access →</button>
-            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14px;color:#ababab"><li>✓ 10 premium templates per week</li><li>✓ Full source code included</li><li>✓ Personal &amp; client use</li><li>✓ New templates every week</li></ul>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14px;color:#ababab"><li>✓ Every template and build prompt</li><li>✓ Live demos and source code</li><li>✓ Personal &amp; client use</li><li>✓ Cancel anytime</li></ul>
           </div>
           <div data-tilt="8" style="transform:perspective(1000px) rotateX(calc(var(--ty,0) * 1deg)) rotateY(calc(var(--tx,0) * 1deg));transition:transform 500ms cubic-bezier(.16,1,.3,1);background:#202020;border:1px solid #e1e36b;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:rgba(255,255,255,.15) -4px -4px 8px 0 inset,rgba(255,255,255,.15) 4px 4px 4px 0 inset">
             <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:18px;font-weight:600">Yearly</span><span style="font-size:12px;background:#e1e36b;color:#09090b;font-weight:700;border-radius:999px;padding:2px 10px">Save 69%</span></div>
             <span style="font-size:14px;color:#ababab;margin-top:-8px">Unlimited prompts for a year</span>
             <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:56px;line-height:1;font-weight:600;letter-spacing:-.04em">$9</span><span style="color:#ababab">/ mo · billed $108 yearly</span></div>
-            <span style="font-size:13px;color:#ababab">Renews every 12 months · cancel anytime</span>
+            <span style="font-size:13px;color:#ababab">Billed yearly. Cancel from your account.</span>
             <button onClick="{{ goBuilder }}" style="background:#e1e36b;color:#09090b;border:none;border-radius:999px;padding:12px;font-weight:600;cursor:pointer">Get access →</button>
-            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14px;color:#f5f5f5"><li>✓ Unlimited premium templates</li><li>✓ 3D templates, components &amp; scenes</li><li>✓ UI screens: full app dashboards</li><li>✓ Animated shader backgrounds</li><li>✓ MCP for Claude, Cursor &amp; Codex</li><li>✓ Full source code · personal &amp; client use</li></ul>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14px;color:#f5f5f5"><li>✓ Everything in Monthly</li><li>✓ New templates every week</li><li>✓ Component customizer</li><li>✓ Personal &amp; client use</li></ul>
           </div>
           <div data-tilt="8" style="transform:perspective(1000px) rotateX(calc(var(--ty,0) * 1deg)) rotateY(calc(var(--tx,0) * 1deg));transition:transform 500ms cubic-bezier(.16,1,.3,1);background:#121212;border:1px solid #303030;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:14px">
-            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:18px;font-weight:600">Lifetime</span><span style="font-size:12px;border:1px solid #303030;border-radius:999px;padding:2px 10px;color:#ababab">20% off</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:18px;font-weight:600">Lifetime</span></div>
             <span style="font-size:14px;color:#ababab;margin-top:-8px">Unlimited prompts, kept for good</span>
             <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:56px;line-height:1;font-weight:600;letter-spacing:-.04em">$239</span><span style="color:#ababab">one-time</span></div>
             <span style="font-size:13px;color:#ababab">Single payment · never renews</span>
             <button onClick="{{ goBuilder }}" style="background:#202020;border:1px solid #303030;border-radius:999px;padding:12px;font-weight:600;cursor:pointer">Get access →</button>
-            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14px;color:#ababab"><li>✓ Everything in Yearly</li><li>✓ Every future template</li><li>✓ Full source code included</li><li>✓ Personal &amp; client use</li></ul>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14px;color:#ababab"><li>✓ Everything in Yearly</li><li>✓ Every future template</li><li>✓ One payment, no renewals</li></ul>
           </div>
         </div>
       </section>
@@ -802,10 +838,10 @@ input,select,textarea,button{font:inherit;color:inherit}
       <section data-reveal="1" style="opacity:var(--in,0);transform:translateY(calc((1 - var(--in,0)) * 48px));transition:opacity .9s ease,transform 1.1s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;gap:20px;align-items:center;text-align:center;padding-bottom:40px">
         <span style="font-size:13px;color:#e1e36b">Where this leaves you</span>
         <h2 style="margin:0;font-size:clamp(34px,5.5vw,56px);line-height:1.04;letter-spacing:-.035em;font-weight:600">Claude builds it.<br /><span style="color:#ababab">Cue gives it the blueprint.</span></h2>
-        <p style="margin:0;color:#ababab;max-width:560px">AI has already made building websites easier than it has ever been. Someone still has to decide what should be built. That part is done before you open the chat.</p>
+        <p style="margin:0;color:#ababab;max-width:560px">The decisions are made before you open the chat. Claude writes the code.</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
           <button onClick="{{ goBuilder }}" style="background:#e1e36b;color:#09090b;border:none;border-radius:999px;padding:12px 20px;font-weight:600;cursor:pointer">Start a build prompt →</button>
-          <button onClick="{{ goLibrary }}" style="background:#202020;border:1px solid #303030;border-radius:999px;padding:12px 20px;cursor:pointer">Look through it first →</button>
+          <button onClick="{{ goLibrary }}" style="background:#202020;border:1px solid #303030;border-radius:999px;padding:12px 20px;cursor:pointer">Browse the library →</button>
         </div>
       </section>
     </main>
@@ -828,6 +864,7 @@ input,select,textarea,button{font:inherit;color:inherit}
           <sc-if value="{{ dtOpenP }}"><button onClick="{{ copyDt }}" style="background:#e1e36b;color:#09090b;border:none;border-radius:999px;padding:10px 18px;font-weight:600;cursor:pointer">Copy build prompt</button></sc-if>
           <sc-if value="{{ dtLocked }}" hint-placeholder-val="{{ false }}"><button onClick="{{ openPaywall }}" style="background:#e1e36b;color:#09090b;border:none;border-radius:999px;padding:10px 18px;font-weight:600;cursor:pointer">Get access →</button></sc-if>
           <button onClick="{{ useDt }}" style="background:#202020;border:1px solid #303030;border-radius:999px;padding:10px 18px;cursor:pointer">Use as base in Builder →</button>
+          <sc-if value="{{ dtDemo }}" hint-placeholder-val="{{ false }}"><a href="{{ dtDemoUrl }}" target="_blank" rel="noopener" style="background:#202020;border:1px solid #303030;border-radius:999px;padding:10px 18px;color:#f5f5f5;text-decoration:none">Open live demo ↗</a></sc-if>
         </div>
         <div style="border:1px solid #303030;border-radius:20px;overflow:hidden">
           <div style="display:flex;justify-content:space-between;padding:10px 16px;background:#202020;font-size:13px;color:#ababab"><span>build-prompt.md</span><span>{{ dtLines }} lines</span></div>
@@ -916,7 +953,7 @@ input,select,textarea,button{font:inherit;color:inherit}
       <button onClick="{{ closePaywall }}" aria-label="Close" style="position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:#202020;border:1px solid #303030;cursor:pointer">×</button>
       <div style="display:flex;flex-direction:column;gap:10px;animation:mxRiseL 600ms cubic-bezier(.16,1,.3,1) both">
         <h2 style="margin:0;font-size:32px;line-height:1.05;letter-spacing:-.03em;font-weight:600;padding-right:40px;text-wrap:balance">Unlock every build prompt.</h2>
-        <p style="margin:0;color:#ababab">All {{ premiumCount }} premium templates, full source code, and new builds every week. From $9 a month.</p>
+        <p style="margin:0;color:#ababab">All {{ premiumCount }} premium templates, their prompts and live demos. From $9 a month.</p>
       </div>
       <div role="radiogroup" aria-label="Billing" style="display:flex;gap:4px;padding:4px;background:#000;border:1px solid #303030;border-radius:999px;align-self:flex-start">
         <sc-for list="{{ bills }}" as="b" hint-placeholder-count="3">
@@ -930,7 +967,7 @@ input,select,textarea,button{font:inherit;color:inherit}
         <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:14px"><sc-for list="{{ plan.features }}" as="ft" hint-placeholder-count="4"><li>✓ {{ ft }}</li></sc-for></ul>
         <button onClick="{{ unlock }}" style="background:#e1e36b;color:#09090b;border:none;border-radius:999px;padding:12px;font-weight:600;cursor:pointer;box-shadow:rgba(255,255,255,.15) -4px -4px 8px 0 inset,rgba(255,255,255,.15) 4px 4px 4px 0 inset">Get access →</button>
       </div>
-      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:#ababab"><span>13,500+ builders shipping</span><button onClick="{{ paywallToPlans }}" style="background:none;border:none;color:#f5f5f5;font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0">Compare all plans</button></div>
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:#ababab"><span>Cancel anytime from your account.</span><button onClick="{{ paywallToPlans }}" style="background:none;border:none;color:#f5f5f5;font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0">Compare all plans</button></div>
     </div>
   </sc-if>
 
@@ -939,25 +976,37 @@ input,select,textarea,button{font:inherit;color:inherit}
   </sc-if>
 
   <sc-if value="{{ notHome }}" hint-placeholder-val="{{ false }}">
-  <div style="position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:30;width:min(560px,calc(100vw - 32px));display:flex;align-items:center;justify-content:space-between;gap:12px;background:#202020;border:1px solid #303030;border-radius:999px;padding:8px 8px 8px 20px;box-shadow:rgba(255,255,255,.15) -4px -4px 8px 0 inset,rgba(255,255,255,.1) 4px 4px 4px 0 inset">
-    <span style="font-size:14px;display:flex;flex-direction:column;line-height:18px"><span style="font-weight:600">Skip the blank chat</span><span style="color:#ababab;font-size:12px">From $29</span></span>
+  <div class="hide-sm" style="position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:30;width:min(560px,calc(100vw - 32px));display:flex;align-items:center;justify-content:space-between;gap:12px;background:#202020;border:1px solid #303030;border-radius:999px;padding:8px 8px 8px 20px;box-shadow:rgba(255,255,255,.15) -4px -4px 8px 0 inset,rgba(255,255,255,.1) 4px 4px 4px 0 inset">
+    <span style="font-size:14px;display:flex;flex-direction:column;line-height:18px"><span style="font-weight:600">Every template, one plan</span><span style="color:#ababab;font-size:12px">From $9 a month</span></span>
     <button onClick="{{ goPlans }}" style="background:#e1e36b;color:#09090b;border:none;border-radius:999px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer">See plans →</button>
   </div>
   </sc-if>
+  <nav class="tabbar" aria-label="Main">
+    <button onClick="{{ hNav.home }}" data-on="{{ tbOn.home }}" aria-current="{{ tbCur.home }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"></path></svg>Home</button>
+    <button onClick="{{ hNav.library }}" data-on="{{ tbOn.library }}" aria-current="{{ tbCur.library }}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"></rect><rect x="13" y="4" width="7" height="7" rx="2"></rect><rect x="4" y="13" width="7" height="7" rx="2"></rect><rect x="13" y="13" width="7" height="7" rx="2"></rect></svg>Library</button>
+    <button onClick="{{ hNav.components }}" data-on="{{ tbOn.components }}" aria-current="{{ tbCur.components }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 4 8 4-8 4-8-4z"></path><path d="m4 12 8 4 8-4"></path><path d="m4 16 8 4 8-4"></path></svg>Components</button>
+    <button onClick="{{ hNav.builder }}" data-on="{{ tbOn.builder }}" aria-current="{{ tbCur.builder }}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"></rect><path d="M12 8.5v7M8.5 12h7"></path></svg>Builder</button>
+    <button onClick="{{ hNav.plans }}" data-on="{{ tbOn.plans }}" aria-current="{{ tbCur.plans }}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="17" height="12" rx="3"></rect><path d="M3.5 10h17M7 14.5h3"></path></svg>Plans</button>
+  </nav>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;cardRotation&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;hover&quot;,&quot;always&quot;,&quot;off&quot;],&quot;default&quot;:&quot;hover&quot;,&quot;tsType&quot;:&quot;'hover'|'always'|'off'&quot;,&quot;section&quot;:&quot;Library&quot;},&quot;unlocked&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Access&quot;},&quot;typeVoice&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Grotesk&quot;,&quot;Editorial&quot;,&quot;Terminal&quot;],&quot;default&quot;:&quot;Grotesk&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Feel&quot;},&quot;depth&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Flat&quot;,&quot;Cinematic&quot;,&quot;Vertigo&quot;],&quot;default&quot;:&quot;Cinematic&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Feel&quot;},&quot;mediaMood&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Color&quot;,&quot;Muted&quot;,&quot;Mono&quot;],&quot;default&quot;:&quot;Color&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Feel&quot;},&quot;brandName&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Cue&quot;,&quot;Motif&quot;,&quot;Kinetic&quot;,&quot;Reel&quot;],&quot;default&quot;:&quot;Cue&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Brand&quot;},&quot;customName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Brand&quot;},&quot;wordmark&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Caret&quot;,&quot;Period&quot;,&quot;Pill&quot;,&quot;Italic&quot;],&quot;default&quot;:&quot;Caret&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Brand&quot;}}">
 class Component extends DCLogic {
-  state = { view:'home', T:[], C:[], A:[], cat:'All', tier:'All', q:'', limit:24, open:null, comp:'hero', animOverride:{}, replay:0,
+  state = { view:'home', T:[], C:[], A:[], cat:'All', tier:'All', q:'', limit:24, open:null, comp:'hero', animOverride:{}, replay:0, tune:{speed:1,delay:0,ease:'default'},
     stack:[{c:'navbar',a:'fade-up'},{c:'hero',a:'blur-in'},{c:'marquee',a:'marquee'},{c:'gallery',a:'scale-in'},{c:'steps',a:'slide-in'},{c:'pricing',a:'scale-in'},{c:'faq',a:'fade-up'},{c:'cta',a:'clip-reveal'}],
-    base:null, brief:'', addSel:'features', toast:'', secs:11*3600+21*60+55, chat:0, faq:0, aiState:'idle', aiText:'', bannerOn:true, sort:'latest', fCat:[], fMotion:[], fTier:[], dd:null, ddQ:'', ddHover:null, pal:false, palTab:'trending', palQ:'', palHover:null, mega:null, megaHover:null, pro:false, paywall:false, bill:'yearly', hoverCard:null, rot:0, busy:false, stageBusy:false };
-  MEDIA={billet:["v04","p03"],astera:["v07","p04"],abyssal:["v05","p05"],sentinel:["v08","p08"],amble:["v10","p10"],sanctum:["v11","p11"],apogee:["v12","p12"],keelway:["v13","p13"],colibri:["v14","p16"],vespine:["v15","p14"],"grey-wolf":["v16","p18"],solis:["v17","p15"],katana:["v18","p20"],eagle:["v19","p17"],"-close":["v20","p19"],malachite:["v01","p01"],visor:[null,"p02"],agrumi:[null,"q18"],helix:[null,"q12"],scowlby:[null,"q13"],frostpaw:[null,"q09"],naiade:[null,"q05"],oddball:[null,"q20"],nordlys:[null,"q04"],carrara:[null,"q03"],updraft:[null,"q07"],umbral:[null,"q08"],nopal:[null,"q02"],"soft-cycle":[null,"q06"],"rann-mahal":[null,"q10"],ora:[null,"q16"],earshot:[null,"q17"],pouterby:[null,"q14"],nocturne:[null,"q22"]};
+    base:null, brief:'', addSel:'features', toast:'', chat:0, faq:0, aiState:'idle', aiText:'', bannerOn:true, sort:'latest', fCat:[], fMotion:[], fTier:[], dd:null, ddQ:'', ddHover:null, pal:false, palTab:'trending', palQ:'', palHover:null, mega:null, megaHover:null, pro:false, paywall:false, bill:'yearly', hoverCard:null, rot:0, busy:false, stageBusy:false };
+  MEDIA={"inkwell":["t-inkwell","t-inkwell"],"night-shift":["t-night-shift","t-night-shift"],"quarry":["t-quarry","t-quarry"],"monsoon":["t-monsoon","t-monsoon"],"atlas-rail":["t-atlas-rail","t-atlas-rail"]};
   motionInit(){
     this.reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     this.io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target;el.style.setProperty("--in","1");this.io.unobserve(el);setTimeout(()=>{el.style.transitionDelay="";},1400);}),{threshold:.12});
     this.vio=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting&&!this.reduce){v.muted=true;const p=v.play();if(p&&p.catch)p.catch(()=>{});}else v.pause();}),{rootMargin:"120px"});
     this.onPM=e=>{const el=e.target&&e.target.closest?e.target.closest("[data-tilt]"):null;if(this.tEl&&this.tEl!==el){this.tEl.style.setProperty("--tx","0");this.tEl.style.setProperty("--ty","0");}this.tEl=el;if(!el||this.reduce)return;const r=el.getBoundingClientRect(),a=+el.dataset.tilt||8;el.style.setProperty("--tx",(((e.clientX-r.left)/r.width-.5)*a).toFixed(2));el.style.setProperty("--ty",((.5-(e.clientY-r.top)/r.height)*a).toFixed(2));};
     document.addEventListener("pointermove",this.onPM,{passive:true});
+    this.touch=window.matchMedia("(hover: none)").matches;
+    this.onHv=(e,on)=>{if(this.touch||this.reduce)return;const box=e.target&&e.target.closest?e.target.closest("[data-hovercard]"):null;if(!box)return;if(!on&&e.relatedTarget&&box.contains(e.relatedTarget))return;const v=box.querySelector("video[data-hover]");if(!v)return;if(on){v.muted=true;const p=v.play();if(p&&p.catch)p.catch(()=>{});}else{v.pause();v.currentTime=0;}};
+    this.onOver=e=>this.onHv(e,true);this.onOut=e=>this.onHv(e,false);
+    document.addEventListener("pointerover",this.onOver,{passive:true});document.addEventListener("pointerout",this.onOut,{passive:true});
+    document.addEventListener("focusin",this.onOver);document.addEventListener("focusout",this.onOut);
     const loop=()=>{this.raf=requestAnimationFrame(loop);const vh=window.innerHeight;(this.scenes||[]).forEach(s=>{const r=s.getBoundingClientRect();if(r.bottom<0||r.top>vh)return;let p=Math.min(1,Math.max(0,(vh-r.top)/(vh+r.height)));if(this.reduce)p=.5;if(Math.abs((s._p??-1)-p)<.0005)return;s._p=p;s.style.setProperty("--p",p.toFixed(4));});};
     loop();this.motionScan();
   }
@@ -965,6 +1014,7 @@ class Component extends DCLogic {
     if(!this.io)return;
     document.querySelectorAll("[data-reveal]:not([data-mx])").forEach(el=>{el.dataset.mx="1";const sib=[...el.parentElement.children].filter(c=>c.hasAttribute("data-reveal"));el.style.transitionDelay=(sib.indexOf(el)%6)*70+"ms";if(this.reduce)el.style.setProperty("--in","1");else this.io.observe(el);});
     document.querySelectorAll("video[data-auto]:not([data-mx])").forEach(v=>{v.dataset.mx="1";v.muted=true;this.vio.observe(v);});
+    document.querySelectorAll("video[data-hover]:not([data-mx])").forEach(v=>{v.dataset.mx="1";v.muted=true;if(this.touch)this.vio.observe(v);});
     this.scenes=[...document.querySelectorAll("[data-scene]")];
   }
   measureHdr(){const hd=document.querySelector("header[data-hdr]");if(!hd||this.state.mega)return;const v=hd.offsetHeight+"px";if(this._hdr!==v){this._hdr=v;document.documentElement.style.setProperty("--hdr",v);}}
@@ -1036,7 +1086,7 @@ class Component extends DCLogic {
     this.onRs=()=>{const w=window.innerWidth<1180;if(w!==this.state.narrow)this.setState({narrow:w});this.measureHdr();};window.addEventListener("resize",this.onRs);this.onRs();
     const u=p=>new URL(p,document.baseURI).href;
     Promise.all([import(u('library-data.js')),import(u('component-data.js'))]).then(([l,c])=>this.setState({T:l.TEMPLATES,C:c.COMPONENTS,A:c.ANIMATIONS}));
-    this.tick=setInterval(()=>this.setState(s=>({secs:Math.max(0,s.secs-1),chat:s.view==='why'?(s.chat+1)%24:s.chat})),1000);
+    this.tick=setInterval(()=>{if(this.state.view==='why')this.setState(s=>({chat:(s.chat+1)%24}));},1000);
     this.onKey=e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();this.setState(s=>({pal:!s.pal,palQ:'',palHover:null,palTab:'trending'}));return;}if(e.key!=='Escape')return;const s=this.state;if(s.pal)this.setState({pal:false});else if(s.paywall)this.setState({paywall:false});else if(s.dd)this.setState({dd:null});else if(s.open)this.setState({open:null});};
     this.rt=setInterval(()=>{const m=this.props.cardRotation||'hover';if(m==='always'||(m==='hover'&&this.state.hoverCard))this.setState(s=>({rot:s.rot+1}));},1700);
     window.addEventListener('keydown',this.onKey);
@@ -1061,8 +1111,8 @@ class Component extends DCLogic {
     if(m==='parallax'){[0,1,2].forEach(i=>L.push(h('div',{key:'l'+i,style:{...abs,left:'-15%',right:'-15%',bottom:(-60+i*18)+'%',height:'90%',borderRadius:'50% 50% 0 0',background:`oklch(${0.22+i*0.12} ${0.06+i*0.03} ${(H+i*12)%360})`,animation:`mxParallax ${9-i*2}s ease-in-out infinite`}})));L.reverse();L.push(h('div',{key:'s',style:{...abs,width:'14%',aspectRatio:'1',right:'18%',top:'14%',borderRadius:'50%',background:'#f5f5f5',opacity:.85}}));L.reverse();}
     if(m==='scrub'){L.push(h('div',{key:'f',style:{...abs,left:0,top:'18%',height:'48%',display:'flex',gap:6,width:'200%',animation:'mxMarquee 14s linear infinite'}},...Array.from({length:16},(_,i)=>h('div',{key:i,style:{flex:1,borderRadius:10,background:`oklch(${0.3+(i%4)*0.1} 0.1 ${(H+i*8)%360})`}}))));}
     if(m==='reveal'){L.push(h('div',{key:'b',style:{...abs,left:'12%',right:'12%',top:'12%',bottom:'34%',borderRadius:16,background:`linear-gradient(135deg, ${c1}, ${c2})`,animation:'mxClipLoop 4.5s cubic-bezier(0.77,0,0.175,1) infinite'}}));}
-    const md=this.MEDIA[t.id];if(md){L.length=0;const ms={...abs,inset:0,width:'100%',height:'100%',objectFit:'cover',display:'block'};L.push(md[0]?h('video',{key:'vid-'+t.id,'data-auto':'1',src:'media/'+md[0]+'.mp4',poster:'media/'+md[1]+'.jpg',loop:true,playsInline:true,preload:'none',style:ms}):h('img',{key:'img-'+t.id,src:'media/'+md[1]+'.jpg',alt:'',loading:'lazy',style:ms}));}
-    return h('div',{style:{position:'relative',aspectRatio:'16/10',overflow:'hidden',borderRadius:big?20:24,border:'1px solid #303030',background:`radial-gradient(120% 90% at 30% 15%, ${c2}, ${c3} 72%)`,width:'100%'}},
+    const md=this.MEDIA[t.id];if(md){L.length=0;const ms={...abs,inset:0,width:'100%',height:'100%',objectFit:'cover',display:'block'};L.push(md[0]?h('video',{key:'vid-'+t.id,'data-hover':'1',src:'media/'+md[0]+'.mp4',poster:'media/'+md[1]+'.jpg',loop:true,muted:true,playsInline:true,preload:'metadata','aria-hidden':'true',style:ms}):h('img',{key:'img-'+t.id,src:'media/'+md[1]+'.jpg',alt:'',loading:'lazy',style:ms}));}
+    return h('div',{'data-hovercard':'1',style:{position:'relative',aspectRatio:'16/10',overflow:'hidden',borderRadius:big?20:24,border:'1px solid #303030',background:`radial-gradient(120% 90% at 30% 15%, ${c2}, ${c3} 72%)`,width:'100%'}},
       ...L,
       h('div',{key:'v',style:{...abs,inset:0,background:'linear-gradient(180deg,transparent 45%,rgba(0,0,0,.65))'}}),
       h('div',{key:'n',style:{...abs,left:big?24:16,bottom:big?20:14,right:16,display:'flex',justifyContent:'space-between',alignItems:'flex-end',gap:8}},
@@ -1070,12 +1120,15 @@ class Component extends DCLogic {
         t.isNew?h('span',{style:{fontSize:11,fontWeight:700,letterSpacing:'.08em',textTransform:'uppercase',color:'#09090b',background:'#e1e36b',borderRadius:999,padding:'2px 8px'}},'New'):null));
   }
 
+  tuned(a){const t=this.state.tune||{speed:1,delay:0,ease:'default'},E={smooth:'cubic-bezier(0.22,1,0.36,1)',spring:'cubic-bezier(0.34,1.56,0.64,1)',snappy:'cubic-bezier(0.77,0,0.175,1)',linear:'linear',gentle:'ease-in-out'};return {dur:Math.round(a.dur/t.speed),delay:t.delay,ease:t.ease==='default'?a.ease:E[t.ease],stagger:Math.round(a.stagger/t.speed)};}
+  tuneSpec(){const t=this.state.tune;if(!t||(t.speed===1&&t.delay===0&&t.ease==='default'))return '';return `${t.speed.toFixed(1)}x speed, ${t.delay}ms delay${t.ease==='default'?'':', '+t.ease+' easing'}`;}
   animStyle(a,i){
     if(!a)return {};
+    const T=this.tuned(a);a=Object.assign({},a,{dur:T.dur,ease:T.ease,stagger:T.stagger});const D=T.delay;
     if(a.id==='typewriter')return i===0?{overflow:'hidden',whiteSpace:'nowrap',borderRight:'2px solid #e1e36b',alignSelf:'flex-start',animation:'mxType 2200ms steps(24) both, mxBlink 1s step-end infinite'}:{animation:`mxFadeUp 600ms cubic-bezier(0.22,1,0.36,1) ${2200+i*80}ms both`};
     if(a.id==='marquee'||a.id==='parallax')return {animation:`mxParallax ${a.id==='marquee'?6:5}s ease-in-out ${-i*0.4}s infinite`};
-    if(a.loop)return {animation:`${a.kf} ${a.dur}ms ${a.ease} ${i*a.stagger}ms infinite`};
-    return {animation:`${a.kf} ${a.dur}ms ${a.ease} ${i*a.stagger}ms both`};
+    if(a.loop)return {animation:`${a.kf} ${a.dur}ms ${a.ease} ${D+i*a.stagger}ms infinite`};
+    return {animation:`${a.kf} ${a.dur}ms ${a.ease} ${D+i*a.stagger}ms both`};
   }
 
   compPreview(cid,aid,key){
@@ -1095,13 +1148,13 @@ class Component extends DCLogic {
       case 'marquee':{const words=['Claude','Cursor','Codex','v0','Windsurf','GPT','Claude','Cursor','Codex','v0','Windsurf','GPT'];const mk=(rev,d)=>h('div',{style:st({width:'100%',overflow:'hidden',maskImage:'linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent)',WebkitMaskImage:'linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent)'})},h('div',{style:{display:'flex',gap:28,width:'max-content',animation:`mxMarquee ${d}s linear infinite ${rev?'reverse':''}`}},...words.map((w,k)=>h('span',{key:k,style:{fontSize:26,fontWeight:600,letterSpacing:'-0.02em',color:k%2?'#ababab':'#f5f5f5'}},w))));body=[small('Works with whatever you already use'),mk(false,16),mk(true,19)];break;}
       case 'gallery':body=[grid([0,1,2].map(k=>box([h('div',{style:{aspectRatio:'4/3',borderRadius:14,background:`radial-gradient(circle at 30% 20%, oklch(0.7 0.15 ${T[k]?T[k].hue:40}), oklch(0.2 0.05 ${T[k]?T[k].hue:40}))`}}),h('div',{style:{fontSize:13,fontWeight:600}},T[k]?T[k].name:'Template'),h('div',{style:{fontSize:11,color:'#ababab'}},T[k]?T[k].category:'')],{padding:8,borderRadius:18})))];break;
       case 'features':body=[grid(['Layout','Typography','Motion'].map(t=>box([h('div',{style:{width:28,height:28,borderRadius:10,background:'#e1e36b'}}),h('div',{style:{fontSize:14,fontWeight:600}},t),h('div',{style:{height:6,borderRadius:9,background:'#303030'}}),h('div',{style:{height:6,width:'70%',borderRadius:9,background:'#303030'}})])))];break;
-      case 'steps':body=['Find a design you like','Open the template','Copy the build prompt','Paste it into Claude','Make it yours'].map((t,k)=>h('div',{style:st({display:'flex',gap:14,alignItems:'baseline',width:'100%',padding:'8px 0',borderBottom:'1px solid #202020'})},h('span',{style:{fontSize:12,color:'#e1e36b',fontVariantNumeric:'tabular-nums'}},'0'+(k+1)),h('span',{style:{fontSize:16,fontWeight:600}},t)));break;
-      case 'stats':body=[grid([['131','complete builds'],['13,500+','builders shipping'],['6','free to try']].map(([v,l])=>box([h('div',{style:{fontSize:30,fontWeight:600,letterSpacing:'-0.03em'}},v),h('div',{style:{fontSize:12,color:'#ababab'}},l)])))];break;
+      case 'steps':body=['Pick a hero','Watch it run','Copy the build prompt','Paste it into Claude','Make it yours'].map((t,k)=>h('div',{style:st({display:'flex',gap:14,alignItems:'baseline',width:'100%',padding:'8px 0',borderBottom:'1px solid #202020'})},h('span',{style:{fontSize:12,color:'#e1e36b',fontVariantNumeric:'tabular-nums'}},'0'+(k+1)),h('span',{style:{fontSize:16,fontWeight:600}},t)));break;
+      case 'stats':body=[grid([['131','complete builds'],['24k','monthly visitors'],['6','free to try']].map(([v,l])=>box([h('div',{style:{fontSize:30,fontWeight:600,letterSpacing:'-0.03em'}},v),h('div',{style:{fontSize:12,color:'#ababab'}},l)])))];break;
       case 'comparison':body=[['Hunt award sites for hours','Scroll finished directions'],['Prompt, re-prompt, re-prompt','One paste with the decisions'],['Almost-right generations','A build tested until right'],['An afternoon of describing','One paste, then your edits']].map(([x,y])=>h('div',{style:st({display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,width:'100%'})},h('div',{style:{fontSize:13,color:'#ababab',padding:'8px 12px',border:'1px solid #303030',borderRadius:14}},'- '+x),h('div',{style:{fontSize:13,padding:'8px 12px',background:'#202020',borderRadius:14}},'✓ '+y)));break;
       case 'testimonials':body=[grid([['Maya Chen','Founder'],['Deniz Aksoy','Design Engineer'],['Jordan Reyes','Indie SaaS']].map(([nm,r])=>box([h('div',{style:{color:'#e1e36b',fontSize:12,letterSpacing:2}},'★★★★★'),h('div',{style:{height:6,borderRadius:9,background:'#303030'}}),h('div',{style:{height:6,width:'80%',borderRadius:9,background:'#303030'}}),h('div',{style:{fontSize:12,fontWeight:600,marginTop:4}},nm),h('div',{style:{fontSize:11,color:'#ababab'}},r)])))];break;
       case 'pricing':body=[grid([['Monthly','$29','/mo'],['Yearly','$9','/mo'],['Lifetime','$239','once']].map(([nm,p,per],k)=>box([h('div',{style:{fontSize:12,color:'#ababab'}},nm),h('div',{style:{fontSize:28,fontWeight:600,letterSpacing:'-0.03em'}},p,h('span',{style:{fontSize:12,color:'#ababab',fontWeight:400}},' '+per)),h('div',{style:{padding:'6px 0',textAlign:'center',borderRadius:999,fontSize:11,fontWeight:600,background:k===1?'#e1e36b':'#202020',color:k===1?'#09090b':'#f5f5f5'}},'Get started →')],k===1?{borderColor:'#e1e36b'}:{})))];break;
-      case 'faq':body=['Do I need to be a developer?','Which AI tools do the prompts work with?','Am I locked into the template?','What happens after I pay?'].map((q,k)=>h('div',{style:st({display:'flex',justifyContent:'space-between',width:'100%',padding:'12px 4px',borderBottom:'1px solid #303030',fontSize:14})},q,h('span',{style:{color:'#ababab'}},k===0?'−':'+')));break;
-      case 'cta':body=[small('Where this leaves you',{textTransform:'uppercase',letterSpacing:'.12em',color:'#e1e36b'}),txt('Claude builds it.',36,{textAlign:'center'}),txt('You bring the blueprint.',36,{textAlign:'center',color:'#ababab'}),row([pill('Get access to the library →',true),pill('Look through it first →')],{justifyContent:'center'})];break;
+      case 'faq':body=['What do I actually get?','Do I need to code?','Can I use it for clients?','How do I cancel?'].map((q,k)=>h('div',{style:st({display:'flex',justifyContent:'space-between',width:'100%',padding:'12px 4px',borderBottom:'1px solid #303030',fontSize:14})},q,h('span',{style:{color:'#ababab'}},k===0?'−':'+')));break;
+      case 'cta':body=[small('Where this leaves you',{textTransform:'uppercase',letterSpacing:'.12em',color:'#e1e36b'}),txt('Claude builds it.',36,{textAlign:'center'}),txt('You bring the blueprint.',36,{textAlign:'center',color:'#ababab'}),row([pill('Get access to the library →',true),pill('Browse the library →')],{justifyContent:'center'})];break;
       case 'footer':body=[h('div',{style:{display:'grid',gridTemplateColumns:'1.4fr 1fr 1fr 1fr',gap:12,width:'100%'}},txt('Cue',22),...['Library','Company','Legal'].map(c=>h('div',{style:st({display:'flex',flexDirection:'column',gap:6})},h('div',{style:{fontSize:12,fontWeight:600}},c),h('div',{style:{height:6,width:'70%',borderRadius:9,background:'#303030'}}),h('div',{style:{height:6,width:'50%',borderRadius:9,background:'#303030'}})))),bar('100%',1,'#303030'),small('© 2026 Cue   Terms   Refunds   Privacy')];break;
       case 'announce':body=[h('div',{style:st({display:'flex',gap:10,alignItems:'center',justifyContent:'center',flexWrap:'wrap',width:'100%',padding:'8px 14px',borderRadius:999,background:'#121212',border:'1px solid #303030',fontSize:13})},h('span',{style:{fontSize:11,fontWeight:700,letterSpacing:'.06em',textTransform:'uppercase',background:'#e1e36b',color:'#09090b',borderRadius:999,padding:'2px 8px'}},'New'),'12 directions added this week',h('span',{style:{textDecoration:'underline',color:'#ababab'}},'See them →')),h('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',padding:'10px 10px 10px 18px',border:'1px solid #202020',borderRadius:999,opacity:.5}},txt('Cue',16),pill('Get access →',true))];break;
       case 'split-hero':body=[h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1.1fr',gap:20,width:'100%',alignItems:'center'}},h('div',{style:{display:'flex',flexDirection:'column',gap:10,alignItems:'flex-start'}},pill('Blueprint · 01'),txt('Pages that move like you meant it.',28),small('Layout, type and motion decided before you paste.'),row([pill('Get access →',true),pill('Library')])),h('div',{style:st({aspectRatio:'4/5',borderRadius:24,border:'1px solid #303030',background:`radial-gradient(circle at 35% 30%, oklch(0.75 0.14 ${T[0]?T[0].hue:95}), oklch(0.18 0.04 ${T[0]?T[0].hue:95}) 70%)`})}))];break;
@@ -1118,11 +1171,12 @@ class Component extends DCLogic {
     return h('div',{key,style:{width:'100%',maxWidth:600,display:'flex',flexDirection:'column',alignItems:'center',gap:12}},...body);
   }
 
-  foundations(){return ['## FOUNDATIONS','- Type: -apple-system, system-ui, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif. Scale 12/14/16/18/20/30/56px; body 16/24.','- Colour: surface #000000, raised #202020, strong #121212, border #303030, text #f5f5f5 / #ababab, accent #e1e36b.','- Radius 20 / 24 / 28px, pills fully rounded. Spacing scale 6/8/12/16/20/24/28/32px.','','## MOTION','- One easing curve site-wide: cubic-bezier(0.22,1,0.36,1), 750ms for entrances, 150/300ms for UI.','- Effects driven by scroll progress. Never animate width, height or box-shadow.','- Honour prefers-reduced-motion with a static fallback.',''];}
+  foundations(){return ['## FOUNDATIONS','- Type: -apple-system, system-ui, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif. Scale 12/14/16/18/20/30/56px; body 16/24.','- Colour: surface #000000, raised #202020, strong #121212, border #303030, text #f5f5f5 / #ababab, accent #e1e36b.','- Radius 20 / 24 / 28px, pills fully rounded. Spacing scale 6/8/12/16/20/24/28/32px.','','## MOTION','- Easing: cubic-bezier(0.22,1,0.36,1). Entrances 750ms, interface feedback 150 to 300ms.','- Link effects to scroll position. Animate transform and opacity only.','- Honour prefers-reduced-motion with a static fallback.',''];}
   tail(){return ['## ACCESSIBILITY','- WCAG 2.2 AA contrast. Visible focus-visible ring on every control.','- Full keyboard path; touch targets ≥ 44px.','','## WHAT NOT TO DO','- No purple gradients, no bootstrap buttons, no identical sections.','- Never fade the LCP element in from opacity 0.'];}
   templatePrompt(t){
+    if(t.prompt)return t.prompt;
     const M={drift:'Two blurred colour fields drift on a 9-11s alternate loop behind the headline.',pulse:'A central glow breathes on a 3.2s loop; type stays still.',sweep:'A light band sweeps diagonally every 3.6s across the hero plate.',orbit:'A lit sphere with a hairline orbit ring rotating once per 8s.',rings:'Three concentric rings pulse outward with 400ms offsets.',particles:'Sixteen motes float on independent 3-6s loops; pointer adds drift.',parallax:'Three ridgelines translate at 0.3 / 0.6 / 1.0 of scroll progress.',scrub:'A frame sequence is scrubbed on a canvas by scroll progress.',reveal:'The hero plate wipes in with a clip-path reveal on enter.'};
-    return ['# build-prompt.md: '+t.name,'','## DIRECTION',t.description,'',`Category: ${t.category} · Tier: ${t.tier}`,'',...this.foundations(),`## SECTION 01: ${t.category.toUpperCase()}`,'- Full viewport. Eyebrow pill, then H1, lede and CTA pair.','- '+M[t.motion],'- Animate transform only; hold the final frame so the join never shows.','',...this.tail()].join('\n');
+    return ['# build-prompt.md: '+t.name,'','## DIRECTION',t.description,'',`Category: ${t.category} · Tier: ${t.tier}`,'',...this.foundations(),`## SECTION 01: ${t.category.toUpperCase()}`,'- Fills the first screen: a small label, the headline, one supporting line and two buttons.','- '+M[t.motion],'- Loops must start and end on the same frame so the restart is invisible.','',...this.tail()].join('\n');
   }
   buildPrompt(){
     const s=this.state,base=this.tmpl(s.base),L=['# build-prompt.md','','## BRIEF',s.brief.trim()||'(Describe the page you want: product, audience, tone.)',''];
@@ -1229,7 +1283,6 @@ class Component extends DCLogic {
       f1:fr===1,f2:fr===2,showDots:on,dots:[0,1,2].map(d=>({c:d===fr?'#e1e36b':'rgba(245,245,245,.45)'})),motionLabel:m[0],motionDesc:m[1],rating:this.rating(t),
       enter:()=>{if(this.state.hoverCard!==t.id)this.setState({hoverCard:t.id,rot:0});},leave:()=>this.setState(st=>st.hoverCard===t.id?{hoverCard:null,rot:0}:null)};});
     const dt=this.tmpl(s.open),dtPrompt=dt?this.templatePrompt(dt):'',dtLocked=!!dt&&dt.tier!=='Free'&&!pro;
-    const hh=Math.floor(s.secs/3600),mm=Math.floor(s.secs%3600/60),ss=s.secs%60,p2=n=>String(n).padStart(2,'0');
     const tabs=[['library','Library'],['components','Components'],['builder','Builder'],['why','Why Cue']].map(([v,l])=>({label:l,active:s.view===v,inactive:s.view!==v,go:()=>{this.setState({mega:null});this.go(v);},hover:()=>{const m=v==='library'||v==='components'?v:null;if(this.state.mega!==m)this.setState({mega:m,megaHover:null});}}));
     const sorts=this.SORTS.map(([k,l])=>({label:l,active:s.sort===k,inactive:s.sort!==k,pick:()=>{this.setState({sort:k,limit:24});this.pulse();}}));
     const facets=[['cat','Category','fCat'],['motion','Motion','fMotion'],['tier','Tier','fTier']].map(([k,l,key])=>({label:l,n:s[key].length,hasN:s[key].length>0,open:s.dd===k,closed:s.dd!==k,toggle:()=>this.setState(st=>({dd:st.dd===k?null:k,ddQ:'',ddHover:null}))}));
@@ -1237,30 +1290,33 @@ class Component extends DCLogic {
     if(q)chips.push({label:'“'+s.q.trim()+'”',remove:()=>this.setState({q:''})});
     const dd=this.ddData(),ddPrev=this.preview(s.ddHover),palGroups=this.palData(),palPrev=this.preview(s.palHover),megaPrev=this.preview(s.megaHover||(s.mega==='components'?'comp:hero':'cat:Landing Page'));
     const palTabs=[['trending','Trending'],['categories','Categories'],['motion','Motion'],['sections','Sections'],['animations','Animations']].map(([k,l])=>({label:l,active:!s.palQ.trim()&&s.palTab===k,inactive:!!s.palQ.trim()||s.palTab!==k,pick:()=>this.setState({palTab:k,palQ:'',palHover:null})}));
-    const PL={monthly:['$29','/ month','Renews at $29 every month. Cancel anytime.',['10 premium templates per week','Full source code included','Personal and client use']],yearly:['$9','/ month, billed $108 yearly','Renews every 12 months. Cancel anytime.',['Unlimited premium templates','3D templates, components and scenes','Animated shader backgrounds','MCP for Claude, Cursor and Codex','Full source code, personal and client use']],lifetime:['$239','one-time','Single payment. Never renews.',['Everything in Yearly','Every future template','Full source code included']]}[s.bill];
+    const PL={monthly:['$29','/ month','Billed monthly. Cancel from your account.',['Every template and build prompt','Live demos and source code','Personal and client use']],yearly:['$9','/ month, billed $108 yearly','Billed yearly. Cancel from your account.',['Everything in Monthly','New templates every week','Component customizer','Personal and client use']],lifetime:['$239','one-time','Single payment. Never renews.',['Everything in Yearly','Every future template','One payment, no renewals']]}[s.bill];
     const builderLocked=!!(this.tmpl(s.base)&&this.tmpl(s.base).tier!=='Free'&&!pro);
     const cur=this.comp(s.comp),curAnimId=s.animOverride[s.comp]||(cur?cur.anim:'fade-up'),curAnim=this.anim(curAnimId);
     const groups=[...new Set(s.C.map(c=>c.group))].map(g=>({name:g,items:s.C.filter(c=>c.group===g).map(c=>({id:c.id,name:c.name,active:c.id===s.comp,inactive:c.id!==s.comp,inStack:s.stack.some(x=>x.c===c.id),pick:()=>{this.setState(st=>({comp:c.id,replay:st.replay+1}));this.stageLoad();}}))}));
     const anims=s.A.map(a=>({...a,active:a.id===curAnimId,inactive:a.id!==curAnimId,isDefault:cur&&a.id===cur.anim,durLabel:a.loop?'loop':a.dur+'ms',pick:()=>this.setState(st=>({animOverride:{...st.animOverride,[st.comp]:a.id},replay:st.replay+1}))}));
+    const p2=n=>String(n).padStart(2,'0');
     const stackItems=s.stack.map((it,i)=>{const c=this.comp(it.c)||{name:it.c},a=this.anim(it.a);return {idx:p2(i+1),name:c.name,a:it.a,animName:a?a.name:'',isFirst:i===0,isLast:i===s.stack.length-1,up:()=>this.moveItem(i,-1),down:()=>this.moveItem(i,1),remove:()=>this.setState(st=>({stack:st.stack.filter((_,k)=>k!==i)})),setAnim:e=>{const v=e.target.value;this.setState(st=>({stack:st.stack.map((x,k)=>k===i?{...x,a:v}:x)}));},preview:()=>this.setState(st=>({view:'components',comp:it.c,animOverride:{...st.animOverride,[it.c]:it.a},replay:st.replay+1}))};});
     const prompt=this.buildPrompt(),base=this.tmpl(s.base);
-    const follow=['add a scroll animation','not that kind of animation','make the font less generic','the buttons look like bootstrap','add a gradient... actually remove it','why is everything purple','make the cards less rounded','it needs more whitespace','the sections all look the same','add something behind the hero','the mobile layout is broken now','put the animation back','closer to the first version','actually, start again'];
-    const faqs=[['Isn\u2019t this just a text file I could have written myself?','You could type the words. What you are buying is the part that happens before the typing: the direction chosen, the layout resolved, the type scale set, the motion specified, and the wrong versions already thrown away.'],['Why not just screenshot a site I like and ask the AI to copy it?','A screenshot cannot carry anything that moves (the trigger, the duration, the easing, the order things arrive in), or anything below the fold, or the reasoning behind the spacing.'],['Am I locked into the template once I build it?','No. Once the AI has built it, the code is yours. The template decides where you start, never where you finish.'],['Do I need to be a developer?','You need to be able to copy a prompt, paste it into an AI tool, and run what it gives back. Every plan also includes the full source code.'],['Which AI tools do the prompts work with?','They are model-agnostic and used with Claude, GPT and agentic editors like Cursor and Windsurf.'],['Can I use what I build for client work?','Yes. Every plan is licensed for personal and client use with no cap on how many sites you build.'],['What actually happens after I pay?','Access opens immediately on the same account. Monthly and Yearly renew until you cancel, in one click from the account menu. Lifetime never renews.']].map(([qq,aa],k)=>({q:qq,a:aa,open:s.faq===k,closed:s.faq!==k,toggle:()=>this.setState(st=>({faq:st.faq===k?-1:k}))}));
+    const follow=['make it feel more premium','the heading is too big now','add some motion','less motion, it is distracting','use my brand colour','the colour clashes with the logo','the hero looks empty on mobile','bring back the first layout','make the buttons stand out','now they look like ads','try a different font','the old font was better','fix the spacing','start over'];
+    const faqs=[['What do I actually get?','For each template: a build prompt, a live demo and a preview video. The prompt lists the layout, type, colours and every animation with its timing.'],['Will the prompt give me the same page as the preview?','The preview is recorded from the page that prompt produced. Different models can vary in small details, and you can ask for changes after.'],['Do I need to code?','No. Copy the prompt, paste it into Claude, Cursor or v0, and open what it builds. Knowing a little HTML helps when you edit.'],['Can I use the result for client work?','Yes. Every paid plan covers personal and client projects.'],['Are the templates original?','Yes. Every template is designed for CUE and drawn in code, with no stock images or footage.'],['How do I cancel?','From your account page, at any time. Monthly and Yearly stop renewing. Lifetime never renews.']].map(([qq,aa],k)=>({q:qq,a:aa,open:s.faq===k,closed:s.faq!==k,toggle:()=>this.setState(st=>({faq:st.faq===k?-1:k}))}));
     const nv=v=>e=>{if(e&&e.preventDefault)e.preventDefault();if(v==='access')return this.openPaywall();if(v==='plans'||v==='faq')return this.goPlans(v);this.go(v);};
-    const pans=[['billet','Billet','3D Website','v04','p03'],['astera','Astera','3D Website','v07','p04'],['grey-wolf','Grey Wolf','Hero Section','v16','p18'],['katana','Katana','Landing Page','v18','p20'],['sanctum','Sanctum','Hero Section','v11','p11'],['abyssal','Abyssal','3D Website','v05','p05'],['sentinel','Sentinel','Hero Section','v08','p08'],['keelway','Keelway','Hero Section','v13','p13']].map(([id,name,cat,v,p])=>({name,cat,v:'media/'+v+'.mp4',poster:'media/'+p+'.jpg',open:e=>{if(e&&e.preventDefault)e.preventDefault();this.setState({view:'library',open:id});window.scrollTo({top:0});}}));
+    const pans=[['inkwell','Inkwell','Hero Section','t-inkwell','t-inkwell'],['night-shift','Night Shift','Hero Section','t-night-shift','t-night-shift'],['quarry','Quarry & Co','Hero Section','t-quarry','t-quarry'],['monsoon','Monsoon','Hero Section','t-monsoon','t-monsoon'],['atlas-rail','Atlas Rail','Hero Section','t-atlas-rail','t-atlas-rail']].map(([id,name,cat,v,p])=>({name,cat,v:'media/'+v+'.mp4',poster:'media/'+p+'.jpg',open:e=>{if(e&&e.preventDefault)e.preventDefault();this.setState({view:'library',open:id});window.scrollTo({top:0});}}));
     const hm=n=>'media/'+n+'.jpg',dbl=a=>[...a,...a].map(hm),isHome=s.view==='home';
     return {
       ...this.brandVals(),isHome,notHome:!isHome,homeShown:isHome&&(s.introOn===false||!!s.introLeaving),rootPad:isHome?'0':'96px',panCards:pans,
+      tbOn:{home:isHome?'1':'0',library:s.view==='library'?'1':'0',components:s.view==='components'?'1':'0',builder:s.view==='builder'?'1':'0',plans:s.view==='why'?'1':'0'},
+      tbCur:{home:isHome?'page':'false',library:s.view==='library'?'page':'false',components:s.view==='components'?'page':'false',builder:s.view==='builder'?'page':'false',plans:s.view==='why'?'page':'false'},
       hNav:{home:nv('home'),library:nv('library'),components:nv('components'),builder:nv('builder'),why:nv('why'),access:nv('access'),plans:nv('plans'),faq:nv('faq')},
-      rowA:dbl(['q01','q03','q05','q07','q09','q11','q13','q15']),rowB:dbl(['q02','q04','q06','q08','q10','q12','q14','q16']),rowC:dbl(['q17','q18','q19','q20','q22','p02','p06','p09']),
+      rowA:dbl(['t-quarry-1','t-atlas-rail-1','t-night-shift-2','t-monsoon-2','t-inkwell-3','t-quarry-3','t-atlas-rail-3','t-night-shift-4']),rowB:dbl(['t-monsoon-1','t-inkwell-2','t-quarry-2','t-atlas-rail-2','t-night-shift-3','t-monsoon-3','t-inkwell-4','t-quarry-4']),rowC:dbl(['t-monsoon-4','t-atlas-rail-4','t-inkwell','t-night-shift','t-monsoon','t-night-shift','t-inkwell-1','t-monsoon-1']),
       introOn:s.introOn!==false,skipIntro:()=>this.skipIntro(),logoHover:()=>this.logoHover(),
-      wideHdr:!s.narrow,narrowHdr:!!s.narrow,searchFlex:s.narrow?"0 0 36px":"0 1 280px",bannerOn:s.bannerOn,closeBanner:()=>this.setState({bannerOn:false}),countdown:`${p2(hh)}:${p2(mm)}:${p2(ss)}`,
+      wideHdr:!s.narrow,narrowHdr:!!s.narrow,searchFlex:s.narrow?"0 0 36px":"0 1 280px",bannerOn:s.bannerOn,closeBanner:()=>this.setState({bannerOn:false}),bannerText:`${s.T.length} original hero templates, each with its prompt and a live demo.`,
       tabs,stackCount:s.stack.length,goLibrary:()=>this.go('library'),goBuilder:()=>this.go('builder'),goWhy:()=>this.go('why'),goComponents:()=>this.go('components'),
       goPlans:()=>{this.setState({view:'why',open:null});setTimeout(()=>{const el=document.getElementById('plans');if(el)window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-80,behavior:'smooth'});},60);},
-      wallA:['v04p03','p16','p19','q04','p18','q08','p14','q16','p04','q03','p10','q07','p11','q02','p20','q10'].map(x=>'media/'+x.slice(-3)+'.jpg').concat(['p03','p16','p19','q04','p18','q08','p14','q16','p04','q03','p10','q07','p11','q02','p20','q10'].map(x=>'media/'+x+'.jpg')).slice(0,32),
-      wallB:['q06','p05','q14','p08','q17','p13','q22','p15','q05','p17','q12','p01','q09','p12','q13','p02','q06','p05','q14','p08','q17','p13','q22','p15','q05','p17','q12','p01','q09','p12','q13','p02'].map(x=>'media/'+x+'.jpg'),
+      wallA:['v04p03','t-inkwell-3','t-monsoon-3','t-inkwell-2','t-quarry-3','t-atlas-rail-2','t-monsoon-2','t-quarry-4','t-monsoon','t-atlas-rail-1','t-atlas-rail-1','t-monsoon-2','t-inkwell-2','t-monsoon-1','t-atlas-rail-3','t-night-shift-3'].map(x=>'media/'+x.slice(-3)+'.jpg').concat(['t-quarry','t-inkwell-3','t-monsoon-3','t-inkwell-2','t-quarry-3','t-atlas-rail-2','t-monsoon-2','t-quarry-4','t-monsoon','t-atlas-rail-1','t-atlas-rail-1','t-monsoon-2','t-inkwell-2','t-monsoon-1','t-atlas-rail-3','t-night-shift-3'].map(x=>'media/'+x+'.jpg')).slice(0,32),
+      wallB:['t-quarry-2','t-atlas-rail','t-inkwell-4','t-quarry-1','t-monsoon-4','t-quarry-2','t-monsoon','t-atlas-rail-2','t-night-shift-2','t-night-shift-3','t-monsoon-3','t-inkwell','t-inkwell-3','t-night-shift-2','t-atlas-rail-3','t-night-shift','t-quarry-2','t-atlas-rail','t-inkwell-4','t-quarry-1','t-monsoon-4','t-quarry-2','t-monsoon','t-atlas-rail-2','t-night-shift-2','t-night-shift-3','t-monsoon-3','t-inkwell','t-inkwell-3','t-night-shift-2','t-atlas-rail-3','t-night-shift'].map(x=>'media/'+x+'.jpg'),
       isLibrary:s.view==='library',isComponents:s.view==='components',isBuilder:s.view==='builder',isWhy:s.view==='why',
-      libStats:`${s.T.length||114} templates in the library, ${s.T.filter(t=>t.tier==='Free').length} of them free.`,
+      libStats:`${s.T.length} templates in the library, ${s.T.filter(t=>t.tier==='Free').length} of them free.`,
       sorts,facets,chips,hasChips:chips.length>0,clearAll:()=>{this.setState({q:'',fCat:[],fMotion:[],fTier:[]});this.pulse();},showing:`Showing ${f.length} templates`,
       q:s.q,setQ:e=>this.setState({q:e.target.value,limit:24}),clearFilters:()=>this.setState({q:'',fCat:[],fMotion:[],fTier:[],sort:'latest'}),
       ddOpen:!!dd,dd:dd||{opts:[]},ddQ:s.ddQ,setDdQ:e=>this.setState({ddQ:e.target.value}),closeDd:()=>this.setState({dd:null}),hasDdPrev:!!ddPrev,ddPrev:ddPrev||{thumbs:[],chips:[]},noDdPrev:!ddPrev,
@@ -1270,13 +1326,18 @@ class Component extends DCLogic {
       isPro:pro,notPro:!pro,premiumCount:s.T.filter(t=>t.tier!=='Free').length,busy:s.busy,stageBusy:s.stageBusy,builderLocked,
       loading:s.T.length===0||s.busy,skeletons:[1,2,3,4,5,6],empty:s.T.length>0&&!s.busy&&f.length===0,notBusy:!s.busy&&s.T.length>0,
       shown,hasMore:f.length>s.limit,remaining:f.length-s.limit,loadMore:()=>this.setState(st=>({limit:st.limit+24})),
-      drawerOpen:!!dt,dt:dt||{},dtThumb:dt?this.thumb(dt,true):null,dtPrompt:dtLocked?dtPrompt.split('\n').slice(0,9).join('\n'):dtPrompt,dtLocked,dtOpenP:!dtLocked,dtLines:dtPrompt.split('\n').length,closeDrawer:()=>this.setState({open:null}),
+      drawerOpen:!!dt,dt:dt||{},dtDemo:!!dt&&dt.tier==='Free',dtDemoUrl:dt?'templates/'+dt.id+'/':'',dtThumb:dt?this.thumb(dt,true):null,dtPrompt:dtLocked?dtPrompt.split('\n').slice(0,9).join('\n'):dtPrompt,dtLocked,dtOpenP:!dtLocked,dtLines:dtPrompt.split('\n').length,closeDrawer:()=>this.setState({open:null}),
       copyDt:()=>dtLocked?this.openPaywall():this.copy(dtPrompt,'Build prompt copied'),useDt:()=>{this.setState({base:dt.id,view:'builder',open:null});window.scrollTo({top:0});this.flash(dt.name+' set as base');},
       hasToast:!!s.toast,toast:s.toast,
       groups,cur:cur||{anatomy:[]},curAnim:curAnim||{},anims,stage:cur?this.compPreview(s.comp,curAnimId,s.comp+curAnimId+s.replay):null,
       replay:()=>this.setState(st=>({replay:st.replay+1})),
+      tune:s.tune,tuneSpeedLabel:s.tune.speed.toFixed(1)+'x',tuneDelayLabel:s.tune.delay+'ms',tuneSpec:this.tuneSpec(),tuneOn:!!this.tuneSpec(),
+      setSpeed:e=>{const v=+e.target.value;this.setState(st=>({tune:{...st.tune,speed:v},replay:st.replay+1}));},
+      setDelay:e=>{const v=+e.target.value;this.setState(st=>({tune:{...st.tune,delay:v},replay:st.replay+1}));},
+      eases:[['default','Default'],['smooth','Smooth'],['spring','Spring'],['snappy','Snappy'],['gentle','Gentle'],['linear','Linear']].map(([k,l])=>({label:l,active:s.tune.ease===k,inactive:s.tune.ease!==k,pick:()=>this.setState(st=>({tune:{...st.tune,ease:k},replay:st.replay+1}))})),
+      resetTune:()=>this.setState(st=>({tune:{speed:1,delay:0,ease:'default'},replay:st.replay+1})),
       addComp:()=>{this.setState(st=>({stack:[...st.stack,{c:st.comp,a:curAnimId}]}));this.flash(`${cur.name} + ${curAnim.name} added to page`);},
-      copySpec:()=>this.copy(`${cur.name}\n- Layout: ${cur.spec}\n- Animation: ${curAnim.name}: ${curAnim.spec}`,'Section spec copied'),
+      copySpec:()=>this.copy(`${cur.name}\n- Layout: ${cur.spec}\n- Animation: ${curAnim.name}: ${curAnim.spec}${this.tuneSpec()?'\n- Timing: '+this.tuneSpec():''}`,'Section spec copied'),
       brief:s.brief,setBrief:e=>this.setState({brief:e.target.value}),briefCount:s.brief.length,
       baseOptions:s.T,baseId:s.base||'',setBase:e=>this.setState({base:e.target.value||null}),hasBase:!!base,baseThumb:base?this.thumb(base):null,base:base||{},clearBase:()=>this.setState({base:null}),
       stackItems,hasStack:s.stack.length>0,noStack:s.stack.length===0,allComps:s.C,allAnims:s.A,addSel:s.addSel,setAddSel:e=>this.setState({addSel:e.target.value}),
